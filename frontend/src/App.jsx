@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import './App.css'
-
+import Header from './components/Header/Header'
+import Home from './components/Home/Home'
 function App() {
 
   return (
-    <>
-      <h1 className='bg-blue-900 text-white text-5xl'>Shree Radhe</h1>
-    </>
+    <main className='overflow-x-hidden bg-white text-dark'>
+      <Home/>
+    </main>
   )
 }
 
