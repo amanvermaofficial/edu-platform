@@ -29,7 +29,6 @@ export const FadeUp = (delay) => {
 function Home() {
     return (
         <section className='bg-light overflow-hidden relative'>
-            <Header />
             <div className='flex justify-center items-center flex-col lg:flex-row bg-gray'>
 
                 <div className='max-w-3xl flex flex-col justify-center py-10 xl:py-0'>

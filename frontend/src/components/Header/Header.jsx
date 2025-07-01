@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function Header() {
   const NavbarMenu = [
@@ -35,7 +36,7 @@ function Header() {
           <ul className='flex items-center gap-3'>
             {NavbarMenu.map((menu) => (
               <li>
-                <a href={menu.slug} className='inline-block py-2 px-3'>{menu.name}</a>
+                <Link to={menu.slug} className='inline-block py-2 px-3'>{menu.name}</Link>
               </li>
             ))}
             <button className='primary-btn'>Sign In</button>

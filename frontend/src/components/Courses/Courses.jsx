@@ -3,32 +3,6 @@ import fashionImg from '../../assets/images/fashion.jpg';
 import { MdOutlineArrowOutward } from "react-icons/md";
 import { animate, motion } from 'framer-motion';
 
-const zoomIn = (delay = 0) => ({
-    initial: {
-        scale: 0.95,
-        opacity: 0,
-    },
-    animate: {
-        scale: 1,
-        opacity: 1,
-        transition: {
-            delay,
-            duration: 0.6,
-            ease: [0.25, 0.1, 0.25, 1], // smooth ease-in-out
-        },
-    },
-});
-
-const containerVariants = {
-    animate: {
-        transition: {
-            staggerChildren: 0.2,
-        },
-    },
-};
-
-
-
 function Courses() {
     const courseData = [
         {
