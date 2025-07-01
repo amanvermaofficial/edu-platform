@@ -3,12 +3,7 @@ import Header from '../Header/Header'
 import { IoIosArrowRoundForward } from "react-icons/io";
 import heroImage from '../../assets/hero.png'
 import { animate, motion } from "framer-motion"
-import img1 from '../../assets/icons/img1.png';
-import img2 from '../../assets/icons/img2.png';
-import img3 from '../../assets/icons/img3.png';
-import img4 from '../../assets/icons/img4.png';
-import img5 from '../../assets/icons/img5.png';
-import icons from '../../assets/icons/icons.png';
+import Courses from '../Courses/Courses';
 
 
 export const FadeUp = (delay) => {
@@ -35,7 +30,7 @@ function Home() {
     return (
         <section className='bg-light overflow-hidden relative'>
             <Header />
-            <div className='flex justify-center items-center flex-col lg:flex-row '>
+            <div className='flex justify-center items-center flex-col lg:flex-row bg-gray'>
 
                 <div className='max-w-3xl flex flex-col justify-center py-10 xl:py-0'>
                     <div className='text-center px-3'>
@@ -72,6 +67,7 @@ function Home() {
                         src={heroImage} alt="" className='w-[370px] md:w-[500px] lg:w-[600px]' />
                 </div>
             </div>
+              <Courses/>
         </section>
     )
 }
