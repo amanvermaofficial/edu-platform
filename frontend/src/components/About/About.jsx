@@ -3,7 +3,7 @@ import founderImage from '../../assets/founder.jpeg';
 
 function About() {
     return (
-        <section className="bg-white py-16 px-4 sm:px-6 lg:px-8 text-gray-800">
+        <section className="bg-white py-16 px-4 sm:px-6 lg:px-8 text-gray-800 pt-24">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">

@@ -4,6 +4,10 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import heroImage from '../../assets/hero.png'
 import { animate, motion } from "framer-motion"
 import Courses from '../Courses/Courses';
+import ExploreYoutube from '../Exploreyoutube';
+import FeaturesSection from '../FeaturesSection';
+import Testimonials from '../Testimonials';
+import FinalCTA from '../FinalCTA';
 
 
 export const FadeUp = (delay) => {
@@ -28,8 +32,8 @@ export const FadeUp = (delay) => {
 
 function Home() {
     return (
-        <section className='bg-light overflow-hidden relative'>
-            <div className='flex justify-center items-center flex-col lg:flex-row bg-gray'>
+        <section className='bg-light overflow-hidden relative md:pt-0'>
+            <div className='pt-20 bg-gradient-to-br from-yellow-50 to-white flex justify-center items-center flex-col lg:flex-row bg-gray'>
 
                 <div className='max-w-3xl flex flex-col justify-center py-10 xl:py-0'>
                     <div className='text-center px-3'>
@@ -66,7 +70,11 @@ function Home() {
                         src={heroImage} alt="" className='w-[370px] md:w-[500px] lg:w-[600px]' />
                 </div>
             </div>
+              <FeaturesSection />
               <Courses/>
+              <ExploreYoutube/>
+              <Testimonials />
+              <FinalCTA />
         </section>
     )
 }

@@ -24,7 +24,7 @@ function Courses() {
 
     return (
         <section>
-            <div className='p-4 mt-5 max-w-[1300px] mx-auto my-0'>
+            <div className='pt-24 p-4 mt-5 max-w-[1300px] mx-auto my-0'>
                 <div className='flex items-center justify-between mb-5'>
                     <div>
                         <h1 className='text-start text-[27px] lg:text-4xl font-bold'>Our Courses</h1>
@@ -43,11 +43,15 @@ function Courses() {
                 </div>
 
                 {/* Cards Section */}
-                <div className='flex justify-center xl:justify-start gap-7 xl:gap-18 flex-wrap md:flex-nowrap'>
+                <div className='flex overflow-x-auto md:overflow-visible space-x-4 md:space-x-7 px-1 -mx-4 md:mx-0 scrollbar-hide pb-5'  style={{
+    scrollbarWidth: "none",         // Firefox
+    msOverflowStyle: "none"         // IE/Edge
+  }}>
+
                     {courseData.map((course, index) => (
                         <motion.div
                             key={course.id}
-                            className="bg-white shadow-md rounded-lg overflow-hidden w-80 max-w-sm"
+                            className="bg-white shadow-md rounded-lg overflow-hidden w-72 flex-shrink-0"
                             initial={{ scale: 0.9, opacity: 0 }}
                             whileInView={{ scale: 1, opacity: 1 }}
                             transition={{

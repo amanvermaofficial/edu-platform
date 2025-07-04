@@ -1,45 +1,38 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import logo from '../../assets/logo.png'
 
 function Header() {
   const NavbarMenu = [
-    {
-      name: "Home",
-      slug: "/",
-      active: true
-    },
-    {
-      name: "About",
-      slug: "/about",
-      active: true
-    },
-    {
-      name: "Quiz",
-      slug: "/quiz",
-      active: true
-    },
-    {
-      name: "Courses",
-      slug: "/courses",
-      active: true
-    },
+    { name: "Home", slug: "/" },
+    { name: "About", slug: "/about" },
+    { name: "Quiz", slug: "/quiz" },
+    { name: "Courses", slug: "/courses" },
   ]
+
   return (
-    <nav className=''>
-      <div className="@container py-7 px-20 flex justify-between items-center gap-3">
-        {/** Logo Section */}
-        <div>
-          <h1 className='font-bold text-2xl'>ITI Papers</h1>
+    <nav className="fixed top-0 left-0 w-full z-50">
+      <div className="backdrop-blur-xl bg-white/10 border-b border-white/20 text-black px-6 md:px-20 py-2 flex justify-between items-center ">
+        
+        {/* Logo */}
+        <div className='flex items-center'>
+          <img src={logo} className='w-15' alt="" /> <span className='text-black text-lg font-bold'>ITI Papers</span>
         </div>
-        {/*Menu Section */}
-        <div className='hidden @lg:block'>
-          <ul className='flex items-center gap-3'>
-            {NavbarMenu.map((menu) => (
-              <li>
-                <Link to={menu.slug} className='inline-block py-2 px-3'>{menu.name}</Link>
+
+        {/* Navigation Links */}
+        <div className="hidden md:block">
+          <ul className="flex items-center gap-5">
+            {NavbarMenu.map((menu, index) => (
+              <li key={index}>
+                <Link
+                  to={menu.slug}
+                  className="py-2 px-3 text-black hover:underline transition duration-300"
+                >
+                  {menu.name}
+                </Link>
               </li>
             ))}
-            <button className='primary-btn'>Sign In</button>
+            <button className="primary-btn ml-4">Sign In</button>
           </ul>
         </div>
       </div>

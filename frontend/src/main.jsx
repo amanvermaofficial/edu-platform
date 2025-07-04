@@ -6,6 +6,9 @@ import {createBrowserRouter, createRoutesFromElements, RouterProvider,Route} fro
 import Home from './components/Home/Home.jsx'
 import About from './components/About/About.jsx'
 import Courses from './components/Courses/Courses.jsx'
+import Signup from './pages/Signup.jsx'
+import AuthLayout from './Layout/AuthLayout.jsx'
+import Quiz from './components/Quiz/Quiz.jsx'
 
 const router = createBrowserRouter([
   {
@@ -23,11 +26,24 @@ const router = createBrowserRouter([
         )
       },
       {
+        path:"/quiz",
+        element:(
+          <Quiz />
+        )
+      },
+      {
         path:"/courses",
         element:(
           <Courses />
         )
       }
+    ]
+  },
+  {
+    path:"/",
+    element:<AuthLayout />,
+    children:[
+      {path:"signup",element:<Signup/>}
     ]
   }
 ])
