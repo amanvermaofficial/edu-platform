@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('phone')->unique();
             $table->string('name')->nullable();
+            $table->string('profile_picture')->nullable();
             $table->unsignedBigInteger('trade_id')->nullable();
             $table->string('gender')->nullable();
             $table->date('dob')->nullable();

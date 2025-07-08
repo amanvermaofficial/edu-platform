@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Otp\SendOtpRequest;
 use App\Http\Requests\Otp\VerifyOtpRequest;
 use App\Models\Student;
+use App\Services\Otp\SmsOtpService;
 use Exception;
 use Illuminate\Validation\ValidationException;
 
@@ -15,7 +16,7 @@ class OtpLogController extends Controller
    protected $otpService;
 
    public function __construct(SmsOtpService $otpService){
-      $this->otpService = $otpService
+      $this->otpService = $otpService;
    }
    public function sendOtp(sendOtpRequest $request){
         try {
