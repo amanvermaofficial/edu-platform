@@ -1,65 +1,33 @@
 <?php
 
 namespace App\Http\Controllers\api\v1;
-
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Student\updateProfileRequest;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    
+   public function updateProfile(updateProfileRequest $request){
+    $user = Auth::user();
+
+    $data = $request->only(['name','trade_id','gender','dob','state','district']);
+
+    if($request->hasFile('profile_picture')){
+        $path = $request->file('profile_picture')->store('profile_pictures','public');
+        $data['profile_picture'] = $path;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    $data['completed_profile'] = 1;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    $user->update($data);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Student $student)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Student $student)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Student $student)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Student $student)
-    {
-        //
-    }
+    return response()->json([
+        'success'=>true,
+        'message'=>'Profile updated successfully',
+        'data' => $user
+    ]);
+   }
 }

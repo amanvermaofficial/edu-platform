@@ -14,9 +14,16 @@ class Student extends Authenticatable
     'phone',
     'trade_id',
     'gender',
+    'state',
     'district',
     'dob',
+    'profile_picture',
     'mobile_verified_at',
     'completed_profile',
   ];
+
+  public function trade()
+  {
+    return $this->belongsTo(Trade::class, 'trade_id');
+  }
 }

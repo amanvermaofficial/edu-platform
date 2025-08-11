@@ -40,4 +40,10 @@ class SmsOtpService implements OtpServiceInterface
 
         return false;
     }
+
+    public function deleteOtp(Model $recipient): void
+    {
+        $this->otpLogService->deleteExpiredOtps();
+        OtpLog::where('recipient_id', $recipient->id)->delete();
+    }
 }

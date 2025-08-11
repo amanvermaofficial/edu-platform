@@ -19,6 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('trade_id')->nullable();
             $table->string('gender')->nullable();
             $table->date('dob')->nullable();
+            $table->string('state')->nullable();
+            $table->string('district')->nullable();
             $table->timestamp('mobile_verified_at')->nullable(); 
             $table->boolean('completed_profile')->default(false);
 

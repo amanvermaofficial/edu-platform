@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\v1\OtpLogController;
+use App\Http\Controllers\api\v1\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -11,4 +12,13 @@ Route::get('/user', function (Request $request) {
 Route::prefix('v1')->group(function(){
     Route::post('/send-otp',[OtpLogController::class,'sendOtp']);
     Route::post('/verify-otp',[OtpLogController::class,'verifyOtp']);
+
+   
+});
+
+Route::prefix('v1')->group(function(){
+    Route::middleware('auth:sanctum')->group(function(){
+        Route::post('student/profile',[StudentController::class,'getProfile']);
+        Route::post('student/update-profile',[StudentController::class,'updateProfile']);
+    });
 });
