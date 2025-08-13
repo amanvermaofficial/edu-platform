@@ -9,6 +9,22 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
+    public function getProfile(){
+        $student = Auth::guard('sanctum')->user();
+
+        if(!$student){
+            return response()->json([
+                'success'=>false,
+                'message'=>'Unauthenticated',
+                'data' => null
+            ],401);
+        }
+        return response()->json([
+            'success'=>true,
+            'message'=>'Profile fetched successfully',
+            'data' => $student
+        ]);
+    }
     
    public function updateProfile(updateProfileRequest $request){
     $user = Auth::user();
