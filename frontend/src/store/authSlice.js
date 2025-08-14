@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { set } from 'react-hook-form';
+
 
 const token = localStorage.getItem('token') || null;
 
@@ -30,3 +30,6 @@ const authSlice = createSlice({
         }
     }
 })
+
+export const {loginSuccess,logout,setUserData} = authSlice.actions;
+export default authSlice.reducer
