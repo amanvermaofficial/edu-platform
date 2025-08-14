@@ -6,9 +6,9 @@ import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } 
 import Home from './components/Home/Home.jsx'
 import About from './components/About/About.jsx'
 import Courses from './components/Courses/Courses.jsx'
-import Signup from './pages/Signup.jsx'
 import AuthLayout from './Layout/AuthLayout.jsx'
 import Quiz from './components/Quiz/Quiz.jsx'
+import OtpPage from './pages/OtpPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
       { path: "/about", element: (<About /> )},
       { path: "/quiz",element: ( <Quiz /> ) },
       { path: "/courses",element: ( <Courses />)},
-      { path: '/otp-auth'}
+      { path: '/otp-auth',element: ( <OtpPage />)},
     ]
   }
 ])

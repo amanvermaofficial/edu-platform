@@ -8,6 +8,7 @@ import ExploreYoutube from '../Exploreyoutube';
 import FeaturesSection from '../FeaturesSection';
 import Testimonials from '../Testimonials';
 import FinalCTA from '../FinalCTA';
+import { Link } from 'react-router-dom';
 
 
 export const FadeUp = (delay) => {
@@ -55,10 +56,10 @@ function Home() {
                             initial="initial"
                             animate="animate"
                             className='flex justify-center mt-2'>
-                            <button className='primary-btn flex justify-center items-center gap-2 group'>
+                            <Link to={'/otp-auth'} className='primary-btn flex justify-center items-center gap-2 group'>
                                 Get Start
                                 <IoIosArrowRoundForward className='text-xl group-hover:translate-x-2 group-hover:-rotate-45 duration-300' />
-                            </button>
+                            </Link>
                         </motion.div>
                     </div>
                 </div>
