@@ -1,13 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../../assets/logo.png'
+import { useSelector } from 'react-redux'
 
 function Header() {
+  const authStatus = useSelector((state)=>state.auth.status)
   const NavbarMenu = [
-    { name: "Home", slug: "/" },
-    { name: "About", slug: "/about" },
-    { name: "Quiz", slug: "/quiz" },
-    { name: "Courses", slug: "/courses" },
+    { name: "Home", slug: "/" ,active:!authStatus},
+    { name: "About", slug: "/about",active:!authStatus},
+    { name: "Dashboard", slug: "/dashboard",active:authStatus},
+    { name: "Quiz", slug: "/quiz",active:true },
+    { name: "Courses", slug: "/courses",active:true },
   ]
 
   return (
@@ -22,7 +25,7 @@ function Header() {
         {/* Navigation Links */}
         <div className="hidden md:block">
           <ul className="flex items-center gap-5">
-            {NavbarMenu.map((menu, index) => (
+            {NavbarMenu.map((menu, index) => menu.active ? (
               <li key={index}>
                 <Link
                   to={menu.slug}
@@ -31,8 +34,10 @@ function Header() {
                   {menu.name}
                 </Link>
               </li>
-            ))}
-            <button className="primary-btn ml-4">Sign In</button>
+            ):null)}
+            {authStatus ? (
+              <li>Profile</li>
+            ):(<button className="primary-btn ml-4">Get Start</button>)}
           </ul>
         </div>
       </div>

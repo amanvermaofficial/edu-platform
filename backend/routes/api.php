@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\v1\OtpLogController;
 use App\Http\Controllers\api\v1\StudentController;
+use App\Http\Controllers\api\v1\TradeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,5 +19,6 @@ Route::prefix('v1')->group(function(){
     Route::middleware('auth:sanctum')->group(function(){
         Route::get('student/profile',[StudentController::class,'getProfile']);
         Route::post('student/update-profile',[StudentController::class,'updateProfile']);
+        Route::get('/trades',[TradeController::class,'index']);
     });
 });

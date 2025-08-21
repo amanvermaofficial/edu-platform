@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { sendOtp, verifyOtp } from '../services/OtpService'
 import { toast } from "react-toastify";
+import { loginSuccess } from "../store/authSlice";
+import {useDispatch,useSelector} from 'react-redux'
+import { useNavigate } from "react-router-dom";
 
 
 export default function useOtp() {
@@ -8,6 +11,9 @@ export default function useOtp() {
     const [error, setError] = useState(null);
     const [step, setStep] = useState(1);
     const [phone, setPhone] = useState("");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const userData = useSelector((state) => state.auth.token);
 
     const handleSendOtp = async (phoneNumber) => {
         setLoading(true);
@@ -18,7 +24,7 @@ export default function useOtp() {
             setStep(2);
             toast.success("OTP sent successfully");
         } catch (error) {
-            toast.error(err.response?.data?.message || "Failed to send OTP");
+            toast.error(error       .response?.data?.message || "Failed to send OTP");
         } finally {
             setLoading(false);
         }
@@ -28,11 +34,20 @@ export default function useOtp() {
         setLoading(true);
         setError(null);
         try {
-            await verifyOtp(phone, otp);
-             toast.success("✅ OTP Verified Successfully!");
+            const res = await verifyOtp(phone, otp);
+            dispatch(
+                loginSuccess({ token: res.data.data.token, userData: null })
+            );
+            console.log(userData);
+             toast.success(res.data.message);
+            
+              
+             
+            navigate('/dashboard');
+            console.log(res.data.data.redirect);
             setStep(3);
         } catch (error) {
-            toast.error(err.response?.data?.message || "Invalid OTP");
+            toast.error(error.response?.data?.message || "Invalid OTP");
         } finally {
             setLoading(false);
         }

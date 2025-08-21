@@ -22,6 +22,8 @@ class Student extends Authenticatable
     'completed_profile',
   ];
 
+  
+
   public function trade()
   {
     return $this->belongsTo(Trade::class, 'trade_id');

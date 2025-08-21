@@ -3,7 +3,7 @@ import Input from '../Input';
 import { useForm } from 'react-hook-form';
 import OtpTimer from './OtpTimer';
 
-function VerifyOtpForm({ onVerify, loading, error }) {
+function VerifyOtpForm({ onVerify,onResendOtp, loading, error }) {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onSubmit = (data) => {
@@ -35,7 +35,7 @@ function VerifyOtpForm({ onVerify, loading, error }) {
                 )}
             </div>
 
-            <OtpTimer />
+            <OtpTimer onResend={onResendOtp} />
 
             <button
                 type="submit"

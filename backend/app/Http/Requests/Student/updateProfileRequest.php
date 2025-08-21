@@ -24,9 +24,9 @@ class updateProfileRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'trade_id' => 'required|integer|exists:trades,id',
+            'trade_id' => 'required|string|exists:trades,id',
             'gender' => 'required|in:male,female,other',
-            'dob' => 'required|date|before:today',
+            'dob' => 'nullable|date|before:today',
             'state' => "required|string|max:255",
             'district' => 'required|string|max:255'
         ];

@@ -9,6 +9,7 @@ import FeaturesSection from '../FeaturesSection';
 import Testimonials from '../Testimonials';
 import FinalCTA from '../FinalCTA';
 import { Link } from 'react-router-dom';
+import OtpPage  from '../../pages/OtpPage';
 
 
 export const FadeUp = (delay) => {
@@ -32,6 +33,7 @@ export const FadeUp = (delay) => {
 }
 
 function Home() {
+    const [otpOpen, setOtpOpen] = React.useState(false);
     return (
         <section className='bg-light overflow-hidden relative md:pt-0'>
             <div className='pt-20 bg-gradient-to-br from-yellow-50 to-white flex justify-center items-center flex-col lg:flex-row bg-gray'>
@@ -56,10 +58,10 @@ function Home() {
                             initial="initial"
                             animate="animate"
                             className='flex justify-center mt-2'>
-                            <Link to={'/otp-auth'} className='primary-btn flex justify-center items-center gap-2 group'>
+                            <button onClick={() => setOtpOpen(true)} className='primary-btn flex justify-center items-center gap-2 group'>
                                 Get Start
                                 <IoIosArrowRoundForward className='text-xl group-hover:translate-x-2 group-hover:-rotate-45 duration-300' />
-                            </Link>
+                            </button>
                         </motion.div>
                     </div>
                 </div>
@@ -71,6 +73,7 @@ function Home() {
                         src={heroImage} alt="" className='w-[370px] md:w-[500px] lg:w-[600px]' />
                 </div>
             </div>
+            <OtpPage open={otpOpen} onClose={() => setOtpOpen(false)} />
               <FeaturesSection />
               <Courses/>
               <ExploreYoutube/>

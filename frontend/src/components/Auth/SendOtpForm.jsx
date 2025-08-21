@@ -9,7 +9,7 @@ function SendOtpForm({onSend,loading,error }){
   }
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}  className="max-w-sm mx-auto p-6 bg-white shadow-md rounded-lg space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)}  className="max-w-sm mx-auto p-6 bg-white rounded-lg space-y-4">
         <div>
            <Input 
               type="text"
@@ -27,7 +27,7 @@ function SendOtpForm({onSend,loading,error }){
            {errors.phone && (<p className="text-red-500">{errors.phone.message}</p>) }
         </div>
 
-        <button type='submit' disabled={loading} className={`w-full py-2 text-white rounded-md ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}>
+        <button type='submit' disabled={loading} className={`w-full py-2 text-white rounded-md ${loading ? "bg-gray-400 cursor-not-allowed" : "primary-btn"}`}>
             {loading ? "Sending..." : "Send Otp"}
         </button>
 

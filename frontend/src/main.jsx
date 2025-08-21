@@ -6,9 +6,11 @@ import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } 
 import Home from './components/Home/Home.jsx'
 import About from './components/About/About.jsx'
 import Courses from './components/Courses/Courses.jsx'
-import AuthLayout from './Layout/AuthLayout.jsx'
+import store from './store/store.js'
 import Quiz from './components/Quiz/Quiz.jsx'
 import OtpPage from './pages/OtpPage.jsx'
+import { Provider } from 'react-redux'
+import Dashboard from './components/Dashboard.jsx'
 
 const router = createBrowserRouter([
   {
@@ -19,13 +21,15 @@ const router = createBrowserRouter([
       { path: "/about", element: (<About /> )},
       { path: "/quiz",element: ( <Quiz /> ) },
       { path: "/courses",element: ( <Courses />)},
-      { path: '/otp-auth',element: ( <OtpPage />)},
+      { path: '/dashboard',element: ( <Dashboard />)},
     ]
   }
 ])
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <Provider store={store}>
     <RouterProvider router={router} />
+    </Provider>
   </StrictMode>,
 )

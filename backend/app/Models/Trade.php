@@ -10,7 +10,7 @@ class Trade extends Model
         'name',
         'description',
         'is_active'
-    ]
+    ];
 
     public function students(){
         return $this->hasMany(Student::class,'trade_id');
