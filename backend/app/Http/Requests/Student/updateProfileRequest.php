@@ -23,12 +23,11 @@ class updateProfileRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'email' => 'required|string|email|max:255',
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'trade_id' => 'required|string|exists:trades,id',
             'gender' => 'required|in:male,female,other',
-            'dob' => 'nullable|date|before:today',
             'state' => "required|string|max:255",
-            'district' => 'required|string|max:255'
         ];
     }
 }

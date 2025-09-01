@@ -29,7 +29,7 @@ class StudentController extends Controller
    public function updateProfile(updateProfileRequest $request){
     $user = Auth::user();
 
-    $data = $request->only(['name','trade_id','gender','dob','state','district']);
+    $data = $request->only(['name','email','trade_id','gender','state']);
 
     if($request->hasFile('profile_picture')){
         $path = $request->file('profile_picture')->store('profile_pictures','public');

@@ -2,9 +2,12 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../../assets/logo.png'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import ProfileMenu from '../Profile/ProfileMenu'
 
 function Header() {
   const authStatus = useSelector((state)=>state.auth.status)
+  const navigate = useNavigate();
   const NavbarMenu = [
     { name: "Home", slug: "/" ,active:!authStatus},
     { name: "About", slug: "/about",active:!authStatus},
@@ -12,6 +15,16 @@ function Header() {
     { name: "Quiz", slug: "/quiz",active:true },
     { name: "Courses", slug: "/courses",active:true },
   ]
+
+  const handleProfile = () => {
+    navigate('/profile')
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // token clear
+    navigate('/')
+    window.location.reload();
+  }
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50">
@@ -36,7 +49,7 @@ function Header() {
               </li>
             ):null)}
             {authStatus ? (
-              <li>Profile</li>
+              <ProfileMenu onProfile={handleProfile} onLogout={handleLogout} />
             ):(<button className="primary-btn ml-4">Get Start</button>)}
           </ul>
         </div>

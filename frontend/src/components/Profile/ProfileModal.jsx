@@ -13,23 +13,43 @@ import { updateProfile } from '../../services/ProfileService'
 import { toast } from 'react-toastify';
 import Select from '../Select';
 import { getTrades } from '../../services/TradeService';
+import { useDispatch } from 'react-redux';
+import { setUserData } from "../../store/authSlice";
+
 
 function ProfileModal({ open, onClose, defaultValues }) {
     const { register, reset, handleSubmit, formState: { errors } } = useForm({ defaultValues });
     const [trades, setTrades] = useState([]);
+    const dispatch = useDispatch();
 
     const onSubmit = async (data) => {
-        console.log(data);
-
         try {
-            const response = await updateProfile(data);
-            
+            const formData = new FormData();
+
+            // File handle properly
+            if (data.profile_picture instanceof FileList && data.profile_picture.length > 0) {
+                formData.append("profile_picture", data.profile_picture[0]);
+            }
+
+            // baki saare fields append karo
+            formData.append("name", data.name || "");
+            formData.append("phone", data.phone || "");
+            formData.append("trade_id", data.trade_id || "");
+            formData.append("gender", data.gender || "");
+            formData.append("email", data.email || "");
+            formData.append("state", data.state || "");
+           
+            const response = await updateProfile(formData);
+
             if (response.status === 200) {
                 toast.success(response.data.message);
+                console.log(response.data.data);
+                dispatch(setUserData(response.data.data));
                 onClose();
+                
             }
         } catch (error) {
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "Failed to update profile");
         }
     };
 
@@ -59,20 +79,22 @@ function ProfileModal({ open, onClose, defaultValues }) {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Input
                         label="Profile Picture"
+                        className="mb-4"
+                        accept="image/*"
                         type="file"
                         {...register("profile_picture")}
                     />
 
-                    <Input label="Name" placeholder="Enter your name" {...register("name", { required: "Name is required" })} />
+                    <Input label="Name" className="mb-4" placeholder="Enter your name" {...register("name", { required: "Name is required" })} />
                     {errors.name && (<p className="text-red-500">{errors.name.message}</p>)}
 
-                    <Input label="Email" type="email" placeholder="Enter your email" {...register("email", { required: "Email is required" })} />
+                    <Input label="Email" className="mb-4" type="email" placeholder="Enter your email" {...register("email", { required: "Email is required" })} />
                     {errors.email && (<p className="text-red-500">{errors.email.message}</p>)}
 
-                    <Input label="Phone Number" placeholder="Enter your phone number" {...register("phone", { required: "Phone number is required" })} />
+                    <Input label="Phone Number" className="mb-4" placeholder="Enter your phone number" {...register("phone", { required: "Phone number is required" })} />
                     {errors.phone_number && (<p className="text-red-500">{errors.phone_number.message}</p>)}
 
-                    <Select label='Trade'  {...register("trade_id", { required: "Trade is required" })}>
+                    <Select label='Trade' className="mb-4"  {...register("trade_id", { required: "Trade is required" })}>
                         <option value="">Select Trade</option>
                         {trades.map((trade) => (
                             <option key={trade.id} value={String(trade.id)}>
@@ -103,15 +125,6 @@ function ProfileModal({ open, onClose, defaultValues }) {
                     />
                     {errors.state && (
                         <p className="text-red-500 text-sm">{errors.state.message}</p>
-                    )}
-
-                    {/* District */}
-                    <Input
-                        label="District"
-                        {...register("district", { required: "District is required" })}
-                    />
-                    {errors.district && (
-                        <p className="text-red-500 text-sm">{errors.district.message}</p>
                     )}
 
                     <DialogActions>

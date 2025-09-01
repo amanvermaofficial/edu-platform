@@ -5,9 +5,5 @@ export const getProfile = async () => {
 }
 
 export const updateProfile = async (data)=>{
-    return api.post('/student/update-profile',data,{
-        headers : {
-            'Content-Type' : 'multipart/form-data'
-        }
-    });
+    return api.post('/student/update-profile',data);
 }

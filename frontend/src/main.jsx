@@ -8,7 +8,7 @@ import About from './components/About/About.jsx'
 import Courses from './components/Courses/Courses.jsx'
 import store from './store/store.js'
 import Quiz from './components/Quiz/Quiz.jsx'
-import OtpPage from './pages/OtpPage.jsx'
+import AuthLayout from './components/AuthLayout.jsx'
 import { Provider } from 'react-redux'
 import Dashboard from './components/Dashboard.jsx'
 
@@ -17,11 +17,18 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
     children: [
-      { path: '/', element: <Home />},
-      { path: "/about", element: (<About /> )},
-      { path: "/quiz",element: ( <Quiz /> ) },
-      { path: "/courses",element: ( <Courses />)},
-      { path: '/dashboard',element: ( <Dashboard />)},
+      { path: '/', element: <Home /> },
+      { path: "/about", element: (<About />) },
+      { path: "/quiz", element: (<Quiz />) },
+      { path: "/courses", element: (<Courses />) },
+      {
+        path: '/dashboard',
+        element: (
+          <AuthLayout authentication={true}>
+            <Dashboard />
+          </AuthLayout>
+        )
+      },
     ]
   }
 ])
@@ -29,7 +36,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </Provider>
   </StrictMode>,
 )

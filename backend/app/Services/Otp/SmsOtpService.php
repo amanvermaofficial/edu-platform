@@ -46,4 +46,17 @@ class SmsOtpService implements OtpServiceInterface
         $this->otpLogService->deleteExpiredOtps();
         OtpLog::where('recipient_id', $recipient->id)->delete();
     }
+
+    public function logout(Request $request): array
+    {
+        if($request->user()){
+            $request->user()->tokens()->delete();
+            return ['status' => true, 'message' => 'Logout successful', 'code' => 200];
+        }
+        return [
+            'status' => false,
+            'message' => 'Unauthenticated',
+            'code' => 400
+        ];
+    }
 }

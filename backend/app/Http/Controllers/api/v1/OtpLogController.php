@@ -11,6 +11,7 @@ use App\Services\Otp\SmsOtpService;
 use Auth;
 use Exception;
 use Illuminate\Validation\ValidationException;
+use PhpParser\Node\Stmt\TryCatch;
 
 class OtpLogController extends Controller
 {
@@ -67,5 +68,19 @@ class OtpLogController extends Controller
          ]);
       }
       return $this->validationErrorResponse('Invalid or expired OTP!');
+   }
+
+   public function logout(Request $request)
+   {
+      try{
+         $result = $this->otpService->logout($request);
+         return response()->json([
+            'status' => $result['status'],
+            'message' => $result['message']
+         ],$result['code']);
+      }catch(Exception $e){
+         return $this->systemErrorResponse($e->getMessage());
+      }
+      
    }
 }

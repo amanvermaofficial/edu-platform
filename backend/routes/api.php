@@ -17,6 +17,7 @@ Route::prefix('v1')->group(function(){
 
 Route::prefix('v1')->group(function(){
     Route::middleware('auth:sanctum')->group(function(){
+        Route::post('/logout',[StudentController::class,'logout']);
         Route::get('student/profile',[StudentController::class,'getProfile']);
         Route::post('student/update-profile',[StudentController::class,'updateProfile']);
         Route::get('/trades',[TradeController::class,'index']);

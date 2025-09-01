@@ -15,15 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('phone')->unique();
             $table->string('name')->nullable();
+            $table->string('email')->unique()->nullable();
             $table->string('profile_picture')->nullable();
             $table->unsignedBigInteger('trade_id')->nullable();
             $table->string('gender')->nullable();
-            $table->date('dob')->nullable();
             $table->string('state')->nullable();
-            $table->string('district')->nullable();
             $table->timestamp('mobile_verified_at')->nullable(); 
             $table->boolean('completed_profile')->default(false);
-
             $table->rememberToken();
             $table->timestamps();
         });

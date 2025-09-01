@@ -11,6 +11,7 @@ class Student extends Authenticatable
   use HasApiTokens;
   protected $fillable = [
     'name',
+    'email',
     'phone',
     'trade_id',
     'gender',
