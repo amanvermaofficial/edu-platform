@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import {
   Avatar,
   Menu,
@@ -9,10 +9,14 @@ import {
 } from "@mui/material";
 import Logout from "@mui/icons-material/Logout";
 import Person from "@mui/icons-material/Person";
+import { useSelector } from "react-redux";
 
 function ProfileMenu({ onLogout, onProfile }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const userData = useSelector((state) => state.auth.userData);
+  const profilePic = userData?.profile_picture ? `${import.meta.env.VITE_API_URL}/storage/${userData.profile_picture}` : "/default.jpg";
+  console.log("ProfilePic URL:", profilePic);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,7 +46,7 @@ function ProfileMenu({ onLogout, onProfile }) {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
       >
-        <Avatar sx={{ width: 32, height: 32 }}>A</Avatar>
+        <Avatar sx={{ width: 32, height: 32 }} src={profilePic}>{userData?.name?.[0] || "U"}</Avatar>
       </IconButton>
       <Menu
         anchorEl={anchorEl}

@@ -16,9 +16,9 @@ function Dashboard() {
   useEffect(() => {
     async function fetchProfile() {
       const response = await getProfile();
-      const user= response.data.data;
+      const user = response.data.data;
       dispatch(setUserData(user))
-      if(!response.data.data.completed_profile){
+      if (!response.data.data.completed_profile) {
         setOpen(true);
       }
     }
@@ -31,16 +31,22 @@ function Dashboard() {
       <div className=' text-start flex flex-col gap-5 mt-10'>
         <div className='flex flex-col gap-2'>
           <div className='flex items-center gap-5'>
-            <h1 className='text-5xl font-semibold'>Welcome back, {userData?.name}</h1>
+            {userData ? (
+              <h1 className='text-5xl font-semibold'>
+                Welcome {userData.name}
+              </h1>
+            ) : (
+              <div className="animate-pulse bg-gray-200 h-10 w-40 rounded"></div>
+            )}
             <img src={WavingHand} className="w-16" alt="" />
           </div>
           <p className='text-2xl text-gray-400'>Continue your learning journey today </p>
         </div>
         <div>
-            <button className='primary-btn flex justify-center items-center gap-2 '>
-              Continue Quiz
-              <IoIosArrowRoundForward className='text-xl group-hover:translate-x-2 group-hover:-rotate-45 duration-300' />
-            </button>
+          <button className='primary-btn flex justify-center items-center gap-2 '>
+            Continue Quiz
+            <IoIosArrowRoundForward className='text-xl group-hover:translate-x-2 group-hover:-rotate-45 duration-300' />
+          </button>
         </div>
       </div>
       {userData && <ProfileModal open={open} onClose={() => setOpen(false)} defaultValues={userData} />}
