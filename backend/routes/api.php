@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\api\v1\CourseController;
 use App\Http\Controllers\api\v1\OtpLogController;
+use App\Http\Controllers\api\v1\QuizController;
 use App\Http\Controllers\api\v1\StudentController;
 use App\Http\Controllers\api\v1\TradeController;
 use Illuminate\Http\Request;
@@ -21,5 +23,8 @@ Route::prefix('v1')->group(function(){
         Route::get('student/profile',[StudentController::class,'getProfile']);
         Route::post('student/update-profile',[StudentController::class,'updateProfile']);
         Route::get('/trades',[TradeController::class,'index']);
+        Route::get('/courses',[CourseController::class,'index']);
+        Route::get('/courses/{id}/trades',[TradeController::class,'getTradesByCourse']);
+        Route::get('/trades/{id}/quizzes',[QuizController::class,'getQuizzesByTrade']);
     });
 });
