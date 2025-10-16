@@ -11,7 +11,7 @@ class CourseController extends Controller
 {
     public function index(){
         try {
-            $courses = Course::select('id','name','description');
+            $courses = Course::select('id','name','description')->get();
             return $this->successResponse('Courses fetched successfully', ['courses' => $courses]);
         } catch (Exception $e) {
             return $this->systemErrorResponse($e->getMessage());

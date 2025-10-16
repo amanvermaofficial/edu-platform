@@ -6,14 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quiz extends Model
 {
-  protected $fillable = ['name','description', 'duration', 'total_marks']
+  protected $fillable = ['name','description', 'duration', 'total_marks'];
 
-  public function courses(){
-    return $this->belongsToMany(Course::class,'course_quiz')
-  }
-
-  public function trades(){
-      $this->belongsToMany(Trade::class,'trade_quiz');
+  public function courseTrades(){
+    return $this->belongsToMany(CourseTrade::class,'quiz_course_trade','quiz_id','course_trade_id');
   }
 
   public function questions(){

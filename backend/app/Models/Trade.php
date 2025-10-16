@@ -17,10 +17,10 @@ class Trade extends Model
     }
 
     public function courses(){
-        return $this->belongsTo(Course::class,'course_trade')
+        return $this->belongsToMany(Course::class,'course_trade', 'trade_id','course_id');
     }
 
     public function quizzes(){
-        return $this->belongsToMany(Quiz::class,'quiz_trade')
+        return $this->belongsToMany(Quiz::class,'quiz_course_trade','trade_id','quiz_id');
     }
 }

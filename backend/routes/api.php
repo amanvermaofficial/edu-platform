@@ -22,9 +22,9 @@ Route::prefix('v1')->group(function(){
         Route::post('/logout',[StudentController::class,'logout']);
         Route::get('student/profile',[StudentController::class,'getProfile']);
         Route::post('student/update-profile',[StudentController::class,'updateProfile']);
-        Route::get('/trades',[TradeController::class,'index']);
         Route::get('/courses',[CourseController::class,'index']);
-        Route::get('/courses/{id}/trades',[TradeController::class,'getTradesByCourse']);
-        Route::get('/trades/{id}/quizzes',[QuizController::class,'getQuizzesByTrade']);
+        Route::get('/courses/{course}/trades',[TradeController::class,'getTradesByCourse']);
+        Route::get('/courses/{course}/trades/{trade}/quizzes', [QuizController::class, 'getQuizzesForCourseTrade']);
+        Route::get('/quiz/{quiz}',[QuizController::class,'show']);
     });
 });

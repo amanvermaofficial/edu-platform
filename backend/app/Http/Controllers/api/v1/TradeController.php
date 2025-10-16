@@ -12,11 +12,11 @@ class TradeController extends Controller
 {
     public function getTradesByCourse(Course $course){
         try {
-            $trades = $course->trades()->select('id', 'name', 'description')->get();
-
-           return $this->successResponse('Trades fetched successfully',['trades'=>$trades])
+            $trades = $course->trades()->select('trades.id', 'trades.name', 'trades.description')->get();
+        
+           return $this->successResponse('Trades fetched successfully',['trades'=>$trades]);
         } catch (Exception $e) {
-            return $this->systemErrorResponse($e->getMessage())
+            return $this->systemErrorResponse($e->getMessage());
         }
     }
 }
