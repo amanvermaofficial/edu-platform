@@ -10,6 +10,15 @@ use Illuminate\Http\Request;
 
 class TradeController extends Controller
 {
+    public function index(){
+       try {
+         $trades = Trade::select('name')->get();
+
+        return $this->successResponse('Trades fetched successfully',['trades'=>$trades]);
+       } catch (Exception $e) {
+        return $this->systemErrorResponse($e->getMessage());
+       }
+    }
     public function getTradesByCourse(Course $course){
         try {
             $trades = $course->trades()->select('trades.id', 'trades.name', 'trades.description')->get();

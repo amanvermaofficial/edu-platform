@@ -23,8 +23,11 @@ Route::prefix('v1')->group(function(){
         Route::get('student/profile',[StudentController::class,'getProfile']);
         Route::post('student/update-profile',[StudentController::class,'updateProfile']);
         Route::get('/courses',[CourseController::class,'index']);
+        Route::get('/trades',[TradeController::class,'index']);
         Route::get('/courses/{course}/trades',[TradeController::class,'getTradesByCourse']);
+        //Quiz
         Route::get('/courses/{course}/trades/{trade}/quizzes', [QuizController::class, 'getQuizzesForCourseTrade']);
         Route::get('/quiz/{quiz}',[QuizController::class,'show']);
+        Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submitQuiz']);
     });
 });

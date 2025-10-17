@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('quiz_attempts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id');
-            $table->unsignedBigInteger('quiz_id');
-            $table->integer('score');
+            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('quiz_id')->constrained('quizzes')->onDelete('cascade');
+            $table->integer('score')->default(0);
             $table->integer('total_questions');
-            $table->dateTime('started_time')->nullable();
-            $table->dateTime('completed_at')->nullable();
+            $table->integer('correct_answers')->default(0);
+            $table->integer('wrong_answers')->default(0);
             $table->timestamps();
         });
     }
