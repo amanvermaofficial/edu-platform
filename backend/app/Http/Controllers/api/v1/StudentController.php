@@ -1,49 +1,42 @@
 <?php
 
 namespace App\Http\Controllers\api\v1;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Student\updateProfileRequest;
 use App\Models\Student;
+use App\Services\StudentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
-    public function getProfile(){
-        $student = Auth::guard('sanctum')->user();
 
-        if(!$student){
-            return response()->json([
-                'success'=>false,
-                'message'=>'Unauthenticated',
-                'data' => null
-            ],401);
-        }
+    protected $service;
+
+    public function __construct(StudentService $service)
+    {
+        $this->service = $service;
+    }
+
+    public function getProfile()
+    {
+        $result = $this->service->getProfile();
         return response()->json([
-            'success'=>true,
-            'message'=>'Profile fetched successfully',
-            'data' => $student
-        ]);
-    }
-    
-   public function updateProfile(updateProfileRequest $request){
-    $user = Auth::user();
-
-    $data = $request->only(['name','email','trade_id','gender','state']);
-
-    if($request->hasFile('profile_picture')){
-        $path = $request->file('profile_picture')->store('profile_pictures','public');
-        $data['profile_picture'] = $path;
+            'success' => $result['success'],
+            'message' => $result['message'],
+            'data' => $result['data'] ?? null
+        ], $result['status']);
     }
 
-    $data['completed_profile'] = 1;
+    public function updateProfile(updateProfileRequest $request)
+    {
+        $result = $this->service->updateProfile($request);
 
-    $user->update($data);
-
-    return response()->json([
-        'success'=>true,
-        'message'=>'Profile updated successfully',
-        'data' => $user
-    ]);
-   }
+        return response()->json([
+            'success' => $result['success'],
+            'message' => $result['message'],
+            'data' => $result['data'] ?? null
+        ], $result['status']);
+    }
 }
