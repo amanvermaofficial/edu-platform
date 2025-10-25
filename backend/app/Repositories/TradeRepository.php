@@ -7,7 +7,7 @@ use App\Models\Trade;
 
 class TradeRepository{
     public function getAllTrade(){
-        return Trade::select('name')->get();
+        return Trade::select('id','name','description')->get();
     }
 
     public function getTradesByCourse(Course $course)

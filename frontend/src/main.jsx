@@ -11,6 +11,7 @@ import Quiz from './components/Quiz/Quiz.jsx'
 import AuthLayout from './components/AuthLayout.jsx'
 import { Provider } from 'react-redux'
 import Dashboard from './components/Dashboard.jsx'
+import Trades from './components/Trades/trades.jsx'
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,14 @@ const router = createBrowserRouter([
           </AuthLayout>
         )
       },
+      {
+        path:'/courses/:id/trades',
+        element:(
+          <AuthLayout authentication={true}>
+            <Trades />
+          </AuthLayout>
+        )
+      }
     ]
   }
 ])

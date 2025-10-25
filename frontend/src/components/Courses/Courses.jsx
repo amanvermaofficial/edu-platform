@@ -1,82 +1,38 @@
-import React from 'react';
-import fashionImg from '../../assets/images/fashion.jpg';
-import { MdOutlineArrowOutward } from "react-icons/md";
-import { animate, motion } from 'framer-motion';
+import React, { useEffect } from 'react'
+import {useSelector,useDispatch} from 'react-redux';
+import { setCourses,selectCourse } from '../../store/courseSlice';
+import {Link} from 'react-router-dom';
+import { getCourses } from '../../services/CourseService';
 
 function Courses() {
-    const courseData = [
-        {
-            id: 1,
-            title: "F D & T Mock Class",
-            img: fashionImg,
-        },
-        {
-            id: 2,
-            title: "Gold Facial Training",
-            img: "https://images.herzindagi.info/image/2022/Apr/gold-facial-cost-procedure-how-to-do.jpg"
-        },
-        {
-            id: 3,
-            title: "Women Empowerment Class",
-            img: "https://www.csrmandate.org/wp-content/uploads/2023/09/image.png"
-        }
-    ];
+    const dispatch = useDispatch();
+    const {courses} = useSelector((state)=>state.course);
 
-    return (
-        <section>
-            <div className='pt-24 p-4 mt-5 max-w-[1300px] mx-auto my-0'>
-                <div className='flex items-center justify-between mb-5'>
-                    <div>
-                        <h1 className='text-start text-[27px] lg:text-4xl font-bold'>Our Courses</h1>
-                        <p className='text-gray-400 text-[13px] lg:text-lg text-start'>
-                            Lorem Ipsum is simply dummy text of the prininting
-                        </p>
-                    </div>
-                    <div className='text-sm'>
-                        <a href="#">
-                            <div className='flex items-center gap-[2px] underline'>
-                                <p>Explore More courses</p>
-                                <MdOutlineArrowOutward />
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                {/* Cards Section */}
-                <div className='flex overflow-x-auto md:overflow-visible space-x-4 md:space-x-7 px-1 -mx-4 md:mx-0 scrollbar-hide pb-5'  style={{
-    scrollbarWidth: "none",         // Firefox
-    msOverflowStyle: "none"         // IE/Edge
-  }}>
-
-                    {courseData.map((course, index) => (
-                        <motion.div
-                            key={course.id}
-                            className="bg-white shadow-md rounded-lg overflow-hidden w-72 flex-shrink-0"
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            whileInView={{ scale: 1, opacity: 1 }}
-                            transition={{
-                                delay: index * 0.2,
-                                duration: 0.9,
-                                ease: [0.25, 0.1, 0.25, 1]
-                            }}
-                            viewport={{ once: true, amount: 0.3 }} // triggers only once, 30% in view
-                        >
-                            <img src={course.img} alt="" className="w-full h-52 object-cover" />
-                            <div className="p-4">
-                                <div className="flex items-center justify-between mt-2 mb-4">
-                                    <span className="text-orange-500 text-lg font-semibold">Free</span>
-                                    <h3 className="text-lg font-semibold text-gray-800">{course.title}</h3>
-                                </div>
-                                <button className="primary-btn w-full">
-                                    Enroll Now
-                                </button>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+    useEffect(()=>{
+        const fetchCourses = async ()=>{
+            const res = await getCourses();
+            dispatch(setCourses(res.data.data.courses));
+        };
+        fetchCourses()
+    },[dispatch])
+  return (
+    <div className="max-w-2xl mx-auto mt-20">
+      <h2 className="text-2xl font-bold mb-4">Courses</h2>
+      <ul className="space-y-2">
+        {courses.map((course) => (
+          <li key={course.id} className="border p-3 rounded hover:bg-gray-50">
+            <Link
+              to={`/courses/${course.id}/trades`}
+              onClick={() => dispatch(selectCourse(course))} // ✅ Selected course set
+              className="text-blue-600 font-medium"
+            >
+              {course.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
 
-export default Courses;
+export default Courses

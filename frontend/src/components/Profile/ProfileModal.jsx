@@ -38,6 +38,7 @@ function ProfileModal({ open, onClose, defaultValues }) {
             formData.append("gender", data.gender || "");
             formData.append("email", data.email || "");
             formData.append("state", data.state || "");
+
            
             const response = await updateProfile(formData);
 
@@ -62,8 +63,7 @@ function ProfileModal({ open, onClose, defaultValues }) {
         async function fetchTrades() {
             try {
                 const res = await getTrades();
-                setTrades(res.data.trades);
-                console.log("response");
+                setTrades(res.data.data.trades);
             } catch (error) {
                 toast.error("Failed to load trades");
             }
@@ -97,7 +97,7 @@ function ProfileModal({ open, onClose, defaultValues }) {
                     <Select label='Trade' className="mb-4"  {...register("trade_id", { required: "Trade is required" })}>
                         <option value="">Select Trade</option>
                         {trades.map((trade) => (
-                            <option key={trade.id} value={String(trade.id)}>
+                            <option key={trade.id} value={trade.id}>
                                 {trade.name}
                             </option>
                         ))}

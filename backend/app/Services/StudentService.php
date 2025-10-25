@@ -57,7 +57,8 @@ class StudentService
                 $data['profile_picture'] = $path;
             }
 
-            
+               $data['completed_profile'] = 1;
+
                $updatedUser = $this->repo->update($user, $data);
 
             return [

@@ -12,7 +12,7 @@ function Header() {
     { name: "Home", slug: "/" ,active:!authStatus},
     { name: "About", slug: "/about",active:!authStatus},
     { name: "Dashboard", slug: "/dashboard",active:authStatus},
-    { name: "Quiz", slug: "/quiz",active:true },
+    { name: "Quiz", slug: "/courses",active:true },
     { name: "Courses", slug: "/courses",active:true },
   ]
 

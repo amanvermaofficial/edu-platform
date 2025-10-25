@@ -12,7 +12,6 @@ function Dashboard() {
 
   const userData = useSelector((state) => state.auth.userData);
 
-  console.log(userData);
   useEffect(() => {
     async function fetchProfile() {
       const response = await getProfile();
