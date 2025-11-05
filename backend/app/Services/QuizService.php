@@ -61,14 +61,28 @@ class QuizService
             $score =0;
             $correct=0;
             $wrong=0;
+            $skipped = 0;
 
+            $questions = $quiz->questions;
             $totalQuestions = $quiz->questions()->count();
 
             $attempt = $this->repo->createAttempt($student->id,$quiz->id,$totalQuestions);
 
-            foreach($answers as $ans){
-                $question = $this->repo->getQuestion($ans['question_id']);
-                $selectedOption = $this->repo->getOption($ans['selected_option_id']);
+            foreach($questions as $question){
+               $answer = collect($answers)->firstWhere('question_id',$question->id);
+
+               if(!$answer){
+                $skipped++;
+                $this->repo->saveAttemptAnswer(
+                    $attempt->id,
+                    $question,
+                    null,
+                    $this->repo->getCorrectOption($question->id),
+                    false
+                );
+                continue;
+               }
+                $selectedOption = $this->repo->getOption($answer['selected_option_id']);
                 $correctOption = $this->repo->getCorrectOption($question->id);
 
                 $isCorrect = $selectedOption && $correctOption && $selectedOption->id == $correctOption->id;
@@ -98,7 +112,9 @@ class QuizService
                     'score'=>$score,
                     'correct_answer'=>$correct,
                     'wrong_answers'=>$wrong,
-                ],
+                    'skipped_questions' => $skipped,
+                    'total_questions' => $totalQuestions
+                 ],
             ];
         } catch (Exception $e) {
              return [

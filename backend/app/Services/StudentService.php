@@ -21,7 +21,7 @@ class StudentService
     public function getProfile()
     {
         try {
-            $student = Auth::guard('sanctum')->user();
+            $student = Auth::guard('sanctum')->user()->load('trade');
 
             if (!$student) {
                 return [
@@ -60,6 +60,7 @@ class StudentService
                $data['completed_profile'] = 1;
 
                $updatedUser = $this->repo->update($user, $data);
+               $updatedUser->load('trade');
 
             return [
                 'success' => true,
