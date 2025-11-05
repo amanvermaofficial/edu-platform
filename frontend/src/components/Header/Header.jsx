@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom'
 import ProfileMenu from '../Profile/ProfileMenu'
 
 function Header() {
-  const authStatus = useSelector((state)=>state.auth.status)
+  const authStatus = useSelector((state) => state.auth.status)
   const navigate = useNavigate();
   const NavbarMenu = [
-    { name: "Home", slug: "/" ,active:!authStatus},
-    { name: "About", slug: "/about",active:!authStatus},
-    { name: "Dashboard", slug: "/dashboard",active:authStatus},
-    { name: "Quiz", slug: "/courses",active:true },
-    { name: "Courses", slug: "/courses",active:true },
+    { name: "Home", slug: "/", active: !authStatus },
+    { name: "About", slug: "/about", active: !authStatus },
+    { name: "Dashboard", slug: "/dashboard", active: authStatus },
+    { name: "Quiz", slug: "/courses", active: true },
+    { name: "Courses", slug: "/courses", active: true },
   ]
 
   const handleProfile = () => {
@@ -29,10 +29,15 @@ function Header() {
   return (
     <nav className="fixed top-0 left-0 w-full z-50">
       <div className="backdrop-blur-xl bg-white/10 border-b border-white/20 text-black px-6 md:px-20 py-2 flex justify-between items-center ">
-        
+
         {/* Logo */}
         <div className='flex items-center'>
-          <img src={logo} className='w-15' alt="" /> <span className='text-black text-lg font-bold'>ITI Papers</span>
+          <img src={logo} className='w-15' alt="" />
+          <div className='flex flex-col justify-start'>
+            <span className='text-black font-bold text-start text-xl'>ITI Papers</span>
+            <p className='text-sm'>Learn. Practice. Succeed</p>
+          </div>
+
         </div>
 
         {/* Navigation Links */}
@@ -47,10 +52,10 @@ function Header() {
                   {menu.name}
                 </Link>
               </li>
-            ):null)}
+            ) : null)}
             {authStatus ? (
               <ProfileMenu onProfile={handleProfile} onLogout={handleLogout} />
-            ):(<button className="primary-btn ml-4">Get Start</button>)}
+            ) : (<button className="primary-btn ml-4">Get Start</button>)}
           </ul>
         </div>
       </div>

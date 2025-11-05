@@ -1,0 +1,166 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { getQuizById, submitQuiz } from "../../services/quizService";
+import { setResult } from "../../store/quizSlice";
+import { toast } from "react-toastify";
+import { FaQuestionCircle } from "react-icons/fa";
+
+function QuizAttempt() {
+  const { quizId } = useParams();
+  const [quiz, setQuiz] = useState(null);
+  const [answers, setAnswers] = useState({});
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchQuiz = async () => {
+      try {
+        setLoading(true);
+        const res = await getQuizById(quizId);
+        setQuiz(res.data?.data?.quiz);
+      } catch (error) {
+        toast.error("Failed to load quiz");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchQuiz();
+  }, [quizId]);
+
+  const handleAnswer = (questionId, optionId) => {
+    setAnswers((prev) => ({
+      ...prev,
+      [questionId]: optionId,
+    }));
+  };
+
+  const handleNext = () => {
+    if (currentIndex < quiz.questions.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!window.confirm("Are you sure you want to submit your answers?")) return;
+
+    try {
+      const formattedAnswers = Object.keys(answers).map((questionId) => ({
+        question_id: parseInt(questionId),
+        selected_option_id: answers[questionId],
+      }));
+
+      const res = await submitQuiz(quizId, formattedAnswers);
+      dispatch(setResult(res.data.data));
+      navigate("/quiz-result");
+    } catch (error) {
+      toast.error("Failed to submit quiz");
+    }
+  };
+
+  // 🟡 Loading State
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-[80vh] space-y-4">
+        <div className="h-12 w-12 rounded-full border-4 border-amber-400 border-t-transparent animate-spin"></div>
+        <p className="text-gray-600 text-lg font-medium">Loading quiz...</p>
+      </div>
+    );
+  }
+
+  // ❌ No quiz found
+  if (!quiz) {
+    return (
+      <div className="flex justify-center items-center h-[80vh] bg-amber-50">
+        <p className="text-red-500 text-lg font-semibold">Quiz not found.</p>
+      </div>
+    );
+  }
+
+  const question = quiz.questions[currentIndex];
+
+  // 🟢 Main UI
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-100 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-6 sm:p-8 transition-all duration-300">
+        
+        {/* Header */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <FaQuestionCircle className="text-amber-600 text-3xl sm:text-4xl" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-amber-700 text-center">
+            {quiz.title}
+          </h1>
+        </div>
+
+        {/* Progress */}
+        <div className="text-center text-gray-600 mb-6 text-sm sm:text-base">
+          Question {currentIndex + 1} of {quiz.questions.length}
+        </div>
+
+        {/* Question */}
+        <div className="mb-5">
+          <p className="font-semibold text-base sm:text-lg text-gray-900 mb-3 leading-relaxed">
+            {question.question_text}
+          </p>
+
+          <div className="space-y-3">
+            {question.options.map((option) => (
+              <label
+                key={option.id}
+                className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-all duration-200 text-sm sm:text-base ${
+                  answers[question.id] === option.id
+                    ? "bg-amber-50 border-amber-500 text-amber-700 shadow-sm"
+                    : "bg-white border-gray-300 hover:bg-gray-50"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name={`question-${question.id}`}
+                  value={option.id}
+                  checked={answers[question.id] === option.id}
+                  onChange={() => handleAnswer(question.id, option.id)}
+                  className="accent-amber-600 h-4 w-4 sm:h-5 sm:w-5"
+                />
+                <span className="text-gray-800">{option.option_text}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Navigation Buttons */}
+        <div className="flex justify-between mt-8">
+          {currentIndex > 0 ? (
+            <button
+              onClick={() => setCurrentIndex((prev) => prev - 1)}
+              className="px-4 sm:px-6 py-2 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-100 transition-all text-sm sm:text-base"
+            >
+              Previous
+            </button>
+          ) : (
+            <div />
+          )}
+
+          {currentIndex < quiz.questions.length - 1 ? (
+            <button
+              onClick={handleNext}
+              className="px-5 sm:px-7 py-2 bg-amber-600 text-white rounded-full font-medium hover:bg-amber-700 transition-all text-sm sm:text-base"
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              className="px-5 sm:px-7 py-2 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-all text-sm sm:text-base"
+            >
+              Submit
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default QuizAttempt;

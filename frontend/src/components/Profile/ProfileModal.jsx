@@ -6,7 +6,10 @@ import {
     DialogActions,
     Button,
     MenuItem,
+    Avatar,
+    IconButton
 } from "@mui/material";
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { useForm } from 'react-hook-form';
 import Input from '../Input';
 import { updateProfile } from '../../services/ProfileService'
@@ -15,11 +18,13 @@ import Select from '../Select';
 import { getTrades } from '../../services/TradeService';
 import { useDispatch } from 'react-redux';
 import { setUserData } from "../../store/authSlice";
+import { Controller } from 'react-hook-form';
 
 
 function ProfileModal({ open, onClose, defaultValues }) {
-    const { register, reset, handleSubmit, formState: { errors } } = useForm({ defaultValues });
+    const { register, reset, handleSubmit, control, formState: { errors } } = useForm({ defaultValues });
     const [trades, setTrades] = useState([]);
+      const [preview, setPreview] = useState(defaultValues?.profile_picture || null);
     const dispatch = useDispatch();
 
     const onSubmit = async (data) => {
@@ -39,7 +44,7 @@ function ProfileModal({ open, onClose, defaultValues }) {
             formData.append("email", data.email || "");
             formData.append("state", data.state || "");
 
-           
+
             const response = await updateProfile(formData);
 
             if (response.status === 200) {
@@ -47,7 +52,7 @@ function ProfileModal({ open, onClose, defaultValues }) {
                 console.log(response.data.data);
                 dispatch(setUserData(response.data.data));
                 onClose();
-                
+
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to update profile");
@@ -55,7 +60,6 @@ function ProfileModal({ open, onClose, defaultValues }) {
     };
 
     useEffect(() => {
-        console.log("Default values in profile:", defaultValues);
         reset(defaultValues);
     }, [defaultValues, reset]);
 
@@ -72,36 +76,92 @@ function ProfileModal({ open, onClose, defaultValues }) {
         fetchTrades();
     }, []);
 
+       const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setPreview(URL.createObjectURL(file));
+        }
+    };
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
             <DialogTitle>Update Profile</DialogTitle>
             <DialogContent dividers>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <Input
-                        label="Profile Picture"
-                        className="mb-4"
-                        accept="image/*"
-                        type="file"
-                        {...register("profile_picture")}
-                    />
+                      <div className="flex flex-col items-center mb-6">
+                        <Avatar
+                            src={preview}
+                            alt=""
+                            sx={{ width: 100, height: 100, marginBottom: 1 }}
+                        />
+                        <input
+                            accept="image/*"
+                            id="profile-upload"
+                            type="file"
+                            style={{ display: "none" }}
+                            {...register("profile_picture")}
+                            onChange={(e) => {
+                                handleImageChange(e);
+                                register("profile_picture").onChange(e);
+                            }}
+                        />
+                        <label htmlFor="profile-upload">
+                            <IconButton
+                                component="span"
+                                sx={{
+                                    backgroundColor: "#f3f4f6",
+                                    "&:hover": { backgroundColor: "#e5e7eb" },
+                                }}
+                            >
+                                <PhotoCameraIcon />
+                            </IconButton>
+                        </label>
+                    </div>
 
-                    <Input label="Name" className="mb-4" placeholder="Enter your name" {...register("name", { required: "Name is required" })} />
+
+                    <Input label="Name" className="mb-4" placeholder="Enter your name" {...register("name", { required: "Name is required", pattern: { value: /^[A-Za-z\s]+$/, message: 'Invalid name' } })} />
                     {errors.name && (<p className="text-red-500">{errors.name.message}</p>)}
 
-                    <Input label="Email" className="mb-4" type="email" placeholder="Enter your email" {...register("email", { required: "Email is required" })} />
+                    <Input label="Email" className="mb-4" type="email" placeholder="Enter your email" {...register("email", {
+                        required: "Email is required", pattern: {
+                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                            message: "Enter a valid email address",
+                        },
+                    })} />
                     {errors.email && (<p className="text-red-500">{errors.email.message}</p>)}
 
-                    <Input label="Phone Number" className="mb-4" placeholder="Enter your phone number" {...register("phone", { required: "Phone number is required" })} />
-                    {errors.phone_number && (<p className="text-red-500">{errors.phone_number.message}</p>)}
+                    <Input label="Phone Number" className="mb-4" placeholder="Enter your phone number" {...register("phone", {
+                        required: "Phone number is required",
+                        pattern: {
+                            value: /^[0-9]+$/,
+                            message: "Phone number should contain only digits",
+                        },
+                        minLength: {
+                            value: 10,
+                            message: "Phone number must be 10 digits",
+                        },
+                        maxLength: {
+                            value: 10,
+                            message: "Phone number must be 10 digits",
+                        },
+                    })} />
+                    {errors.phone && (<p className="text-red-500">{errors.phone.message}</p>)}
 
-                    <Select label='Trade' className="mb-4"  {...register("trade_id", { required: "Trade is required" })}>
-                        <option value="">Select Trade</option>
-                        {trades.map((trade) => (
-                            <option key={trade.id} value={trade.id}>
-                                {trade.name}
-                            </option>
-                        ))}
-                    </Select>
+                    <Controller
+                        name='trade_id'
+                        control={control}
+                        rules={{ required: 'Trade is required' }}
+                        render={({ field }) => (
+                            <Select label='Trade' className="mb-4" {...field}>
+                                <option value="">Select Trade</option>
+                                {trades.map((trade) => (
+                                    <option key={trade.id} value={trade.id}>
+                                        {trade.name}
+                                    </option>
+                                ))}
+                            </Select>
+                        )}
+                    />
+
                     {errors.trade_id && (
                         <p className="text-red-500 text-sm">{errors.trade_id.message}</p>
                     )}
@@ -121,17 +181,35 @@ function ProfileModal({ open, onClose, defaultValues }) {
 
                     <Input
                         label="State"
-                        {...register("state", { required: "State is required" })}
+                        {...register("state", { required: "State is required",
+                         minLength: { value: 2, message: "State name too short" },
+                         })}
                     />
                     {errors.state && (
                         <p className="text-red-500 text-sm">{errors.state.message}</p>
                     )}
 
                     <DialogActions>
-                        <Button onClick={onClose} color="secondary">
+                        <Button onClick={onClose}
+                            variant="outlined"
+                            sx={{
+                                color: "#000",
+                                borderColor: "#000",
+                                "&:hover": {
+                                    backgroundColor: "#000",
+                                    color: "#fff",
+                                },
+                            }}
+                        >
                             Cancel
                         </Button>
-                        <Button type="submit" className='primary-btn' variant="contained">
+                        <Button type="submit" variant="contained"
+                            sx={{
+                                backgroundColor: "#f59e0b",
+                                "&:hover": {
+                                    backgroundColor: "#d97706",
+                                },
+                            }}>
                             Save
                         </Button>
                     </DialogActions>

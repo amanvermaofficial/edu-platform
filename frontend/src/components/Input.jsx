@@ -8,6 +8,20 @@ const Input = React.forwardRef(
     ...props
   },ref){
     const id = useId()
+    if(type === 'radio' || type==='checkbox'){
+      return (
+        <label htmlFor={id} className='flex items-center gap-2 cursor-pointer'>
+          <input
+            id={id}
+            ref={ref}
+            type={type}
+            className={`cursor-pointer ${className}`}
+            {...props}
+          />
+          {label && <span>{label}</span>}
+        </label>
+      )
+    }
     return (
       <div className="w-full">
         {label && <label className='inline-block mb-1 pl-1' htmlFor={id}>{label}</label>}
