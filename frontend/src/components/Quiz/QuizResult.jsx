@@ -37,10 +37,6 @@ function QuizResult() {
             <span>Total Questions</span>
             <span className="font-semibold">{result.total_questions}</span>
           </div>
-          <div className="flex justify-between bg-gray-50 rounded-lg px-4 py-3">
-            <span>Correct Answers</span>
-            <span className="font-semibold text-green-600">{result.correct_answer}</span>
-          </div>
 
           <div className="flex justify-between bg-gray-50 rounded-lg px-4 py-3">
             <span>Wrong Answers</span>

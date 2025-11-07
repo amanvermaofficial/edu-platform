@@ -26,11 +26,14 @@ class QuizRepository{
         return Quiz::with('questions.options')->find($quizId);
     }
 
-    public function createAttempt($studentId,$quizId,$totalQuestions){
+    public function createAttempt($studentId,$quizId,$totalQuestions,$startTime,$endTime){
         return QuizAttempt::create([
             'student_id'=>$studentId,
             'quiz_id'=>$quizId,
-            'total_questions'=>$totalQuestions
+            'total_questions'=>$totalQuestions,
+            'start_time'=>$startTime,
+            'end_time' => $endTime,
+            'duration'=>$endTime->diffInSeconds($startTime),
         ]);
     }
 
@@ -65,6 +68,15 @@ class QuizRepository{
             'score' => $score,
             'correct_answers' => $correct,
             'wrong_answers' => $wrong,
+            'end_time'=>now(),
         ]);
+    }
+
+    public function findAttempt($studentId, $quizId)
+    {
+        return QuizAttempt::where('student_id', $studentId)
+            ->where('quiz_id', $quizId)
+            ->latest()
+            ->first();
     }
 }

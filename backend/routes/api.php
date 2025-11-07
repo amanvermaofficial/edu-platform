@@ -29,5 +29,6 @@ Route::prefix('v1')->group(function(){
         Route::get('/courses/{course}/trades/{trade}/quizzes', [QuizController::class, 'getQuizzesForCourseTrade']);
         Route::get('/quizzes/{quiz}',[QuizController::class,'show']);
         Route::post('/quizzes/{quiz}/submit', [QuizController::class, 'submitQuiz']);
+        Route::post('/quizzes/{quiz}/submit',[QuizController::class,'startQuiz']);
     });
 });

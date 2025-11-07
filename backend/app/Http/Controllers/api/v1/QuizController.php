@@ -46,6 +46,17 @@ class QuizController extends Controller
         return $this->systemErrorResponse($result['message']);
     }
 
+    public function startQuiz(Request $request,Quiz $quiz)
+    {
+        $result = $this->service->startQuiz($request,$quiz);
+
+        if($result['success']){
+            return $this->successResponse($result['message'],$result['data']);
+        }
+
+        return $this->systemErrorResponse($result['message']);
+    }
+
     public function submitQuiz(Request $request, Quiz $quiz)
     {
         $result = $this->service->submitQuiz($request, $quiz);
