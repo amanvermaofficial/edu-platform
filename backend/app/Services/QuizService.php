@@ -6,8 +6,8 @@ use App\Models\Quiz;
 use App\Repositories\QuizRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use PhpParser\Node\Stmt\TryCatch;
-use Request;
+use Illuminate\Http\Request;
+
 
 /**
  * Class QuizService.
@@ -64,6 +64,22 @@ class QuizService
         try {
             $student = Auth::guard('sanctum')->user();
 
+            $activeAttempt = $this->repo->findActiveAttempt($student->id, $quiz->id);
+
+            if ($activeAttempt) {
+                return [
+                    'success' => true,
+                    'message' => 'Quiz already started.',
+                    'data' => [
+                        'quiz' => $quiz,
+                        'duration' => $activeAttempt->duration,
+                        'start_time' => $activeAttempt->start_time,
+                        'end_time' => $activeAttempt->end_time,
+                    ]
+                ];
+            }
+
+      
             $attempt = $this->repo->createAttempt(
                 $student->id,
                 $quiz->id,
@@ -78,10 +94,11 @@ class QuizService
                 'data' => [
                     'quiz' => $quiz,
                     'duration' => $quiz->duration,
+                    'start_time' => $attempt->start_time,
                     'end_time' => $attempt->end_time
                 ]
             ];
-        } catch (\Throwable $th) {
+        } catch (Exception $e) {
             return [
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -95,18 +112,18 @@ class QuizService
             $student = Auth::guard('sanctum')->user();
             $answers = $request->input('answers');
 
-            $attempt = $this->repo->findAttempt($student->id,$quiz->id);
+            $attempt = $this->repo->findAttempt($student->id, $quiz->id);
 
-            if(!$attempt){
+            if (!$attempt) {
                 throw new Exception('No active quiz attempt found.');
             }
 
             $currentTime = now();
 
-            if($currentTime->greaterThan($attempt->end_time)){
+            if ($currentTime->greaterThan($attempt->end_time)) {
                 $expired = true;
-            }else{
-                $expired= false;
+            } else {
+                $expired = false;
             }
 
             $score = $correct = $wrong = $skipped = 0;
@@ -114,12 +131,12 @@ class QuizService
             $questions = $quiz->questions;
             $totalQuestions = $quiz->questions()->count();
 
-            $attempt = $this->repo->createAttempt($student->id, $quiz->id, $totalQuestions);
+           
 
             foreach ($questions as $question) {
                 $answer = collect($answers)->firstWhere('question_id', $question->id);
 
-                if (!$answer || $expired) {
+                if (!$answer) {
                     $skipped++;
                     $this->repo->saveAttemptAnswer(
                         $attempt->id,
@@ -150,7 +167,7 @@ class QuizService
                     $isCorrect
                 );
             }
-           
+
             $this->repo->updateAttemptResult($attempt, $score, $correct, $wrong);
 
             return [

@@ -12,10 +12,10 @@ class QuizAttempt extends Model
         'score',
         'total_questions',
         'correct_answers',
-        'wrong_answers'
+        'wrong_answers',
         'start_time',
         'end_time',
-        'duration'
+        'duration',
     ];
 
     public function student()
