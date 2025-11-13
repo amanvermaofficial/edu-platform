@@ -7,7 +7,7 @@ function About() {
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-500 text-start">About EduPlatform</h1>
+                    <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-500 text-start">About ITI Papers</h1>
                     <p className="mt-4 text-lg text-gray-600 text-justify">
                         Your smart companion for exam preparation. Learn smarter, not harder.
                     </p>
@@ -15,7 +15,7 @@ function About() {
 
                 {/* Mission */}
                 <div className="mb-12">
-                    <h2 className="text-2xl font-semibold text-gray-500 mb-3 text-start">🎯 Our Mission</h2>
+                    <h2 className="text-2xl font-semibold text-gray-500 mb-3 text-start"> Our Mission</h2>
                     <p className="text-gray-700 leading-relaxed text-justify">
                         At EduPlatform, our mission is clear — to democratize access to quality education using intuitive technology, interactive tools, and a student-first experience. We aim to empower learners with personalized learning journeys that drive real results.
                     </p>
@@ -26,10 +26,10 @@ function About() {
                     <img
                         src={founderImage}
                         alt="Aman Verma - Founder"
-                        className="w-48 h-48 sm:w-40 sm:h-48 rounded-xl object-cover shadow-lg mx-auto sm:mx-0   rounded-full object-cover mx-auto sm:mx-0 shadow-md transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl hover:brightness-105 hover:rotate-1"
+                        className="w-48 h-48 sm:w-40 sm:h-48 rounded-xl object-cover shadow-lg mx-auto sm:mx-0 transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl hover:brightness-105 hover:rotate-1"
                     />
                     <div className="sm:col-span-2">
-                        <h2 className="text-2xl font-semibold text-gray-500 mb-2 text-start">👨‍🏫 Meet the Founder</h2>
+                        <h2 className="text-2xl font-semibold text-gray-500 mb-2 text-start"> Meet the Founder</h2>
                         <p className="text-gray-700 leading-relaxed text-justify">
                             <strong>Aman Verma</strong> is an educator, creator, and tech enthusiast. With a vision to make smart education available for all, Aman started EduPlatform to bridge the gap between traditional teaching and digital transformation. His goal is simple: help students succeed with tools they actually enjoy using.
                         </p>

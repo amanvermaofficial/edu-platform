@@ -108,7 +108,7 @@ function QuizList() {
             </p>
             <button
               onClick={() =>
-                navigate(`/courses/${courseId}/trades/${tradeId}/quizzes/${quiz.id}`)
+                navigate(`/courses/${courseId}/trades/${tradeId}/quizzes/${quiz.id}/attempt`)
               }
               className="flex items-center justify-center gap-2 px-4 py-2 w-full bg-amber-600 text-white rounded-full font-medium hover:bg-amber-700 transition-all"
             >

@@ -11,3 +11,7 @@ export const getQuizById = (quizId)=>{
 export const submitQuiz = (quizId,answers) =>{
     return api.post(`/quizzes/${quizId}/submit`,{answers})
 }
+
+export const startQuizAttempt = async (quizId) => {
+    return api.post(`/quizzes/${quizId}/start`)
+}

@@ -5,6 +5,8 @@ import { getQuizById, submitQuiz } from "../../services/quizService";
 import { setResult } from "../../store/quizSlice";
 import { toast } from "react-toastify";
 import { FaQuestionCircle } from "react-icons/fa";
+import { startQuizAttempt } from "../../services/quizService";
+import { useCountdown } from "../../hooks/useCountdown";
 
 function QuizAttempt() {
   const { quizId } = useParams();
@@ -14,21 +16,36 @@ function QuizAttempt() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
+  const [attemptInfo,setAttemptInfo] = useState(null)
+
+  
+const { timeLeft, formatTime } = useCountdown(attemptInfo?.end_time);
+
 
   useEffect(() => {
-    const fetchQuiz = async () => {
+    const initializeQuiz = async () => {
       try {
         setLoading(true);
+        const startRes = await startQuizAttempt(quizId);
+        setAttemptInfo(startRes.data?.data);
+
         const res = await getQuizById(quizId);
         setQuiz(res.data?.data?.quiz);
       } catch (error) {
         toast.error("Failed to load quiz");
+         navigate(-1);
       } finally {
         setLoading(false);
       }
     };
-    fetchQuiz();
+     initializeQuiz();
   }, [quizId]);
+
+  useEffect(()=>{
+    if(timeLeft === 0) handleSubmit();
+  },[timeLeft])
+
+
 
   const handleAnswer = (questionId, optionId) => {
     setAnswers((prev) => ({
@@ -85,7 +102,25 @@ function QuizAttempt() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-100 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-6 sm:p-8 transition-all duration-300">
-        
+        {/* Custom Quiz Header */}
+        <div className="flex justify-between items-center bg-amber-600 text-white px-5 py-3 rounded-t-2xl shadow-md mb-6">
+          <button
+            onClick={() => {
+              if (window.confirm("Are you sure you want to exit the quiz? Unsaved answers will be lost.")) {
+                navigate("/"); // or navigate(-1)
+              }
+            }}
+            className="text-sm sm:text-base font-medium bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-all"
+          >
+            Exit Quiz
+          </button>
+
+          {/* Timer (dummy for now) */}
+          <div className="text-lg font-semibold tracking-wide">
+            ⏱️{ timeLeft !==null ? formatTime(timeLeft) : 'Loading..'}
+          </div>
+        </div>
+
         {/* Header */}
         <div className="flex items-center justify-center gap-2 mb-6">
           <FaQuestionCircle className="text-amber-600 text-3xl sm:text-4xl" />
@@ -109,11 +144,10 @@ function QuizAttempt() {
             {question.options.map((option) => (
               <label
                 key={option.id}
-                className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-all duration-200 text-sm sm:text-base ${
-                  answers[question.id] === option.id
+                className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-all duration-200 text-sm sm:text-base ${answers[question.id] === option.id
                     ? "bg-amber-50 border-amber-500 text-amber-700 shadow-sm"
                     : "bg-white border-gray-300 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 <input
                   type="radio"

@@ -60,7 +60,7 @@ const router = createBrowserRouter([
         )
       },
       {
-        path:'/courses/:courseId/trades/:tradeId/quizzes/:quizId',
+        path:'/courses/:courseId/trades/:tradeId/quizzes/:quizId/attempt',
         element:(
           <AuthLayout authentication={true}>
             <QuizAttempt />
