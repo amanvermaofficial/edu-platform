@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-require 'admin.php';
+require __DIR__.'/admin.php';
 
-// Route::get('/', function () {
-//     return view('admin.index');
-// });
+
