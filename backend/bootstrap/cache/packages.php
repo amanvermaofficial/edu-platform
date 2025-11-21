@@ -34,6 +34,28 @@
       0 => 'Laravel\\Tinker\\TinkerServiceProvider',
     ),
   ),
+  'livewire/livewire' => 
+  array (
+    'aliases' => 
+    array (
+      'Livewire' => 'Livewire\\Livewire',
+    ),
+    'providers' => 
+    array (
+      0 => 'Livewire\\LivewireServiceProvider',
+    ),
+  ),
+  'maatwebsite/excel' => 
+  array (
+    'aliases' => 
+    array (
+      'Excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+    ),
+    'providers' => 
+    array (
+      0 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    ),
+  ),
   'nesbot/carbon' => 
   array (
     'providers' => 
@@ -68,6 +90,52 @@
     array (
       0 => 'TimWassenburg\\ServiceGenerator\\Http\\Providers\\CommandServiceProvider',
       1 => 'TimWassenburg\\ServiceGenerator\\ServiceGeneratorServiceProvider',
+    ),
+  ),
+  'yajra/laravel-datatables-buttons' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Yajra\\DataTables\\ButtonsServiceProvider',
+    ),
+  ),
+  'yajra/laravel-datatables-editor' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Yajra\\DataTables\\EditorServiceProvider',
+    ),
+  ),
+  'yajra/laravel-datatables-export' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Yajra\\DataTables\\ExportServiceProvider',
+    ),
+  ),
+  'yajra/laravel-datatables-fractal' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Yajra\\DataTables\\FractalServiceProvider',
+    ),
+  ),
+  'yajra/laravel-datatables-html' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Yajra\\DataTables\\HtmlServiceProvider',
+    ),
+  ),
+  'yajra/laravel-datatables-oracle' => 
+  array (
+    'aliases' => 
+    array (
+      'DataTables' => 'Yajra\\DataTables\\Facades\\DataTables',
+    ),
+    'providers' => 
+    array (
+      0 => 'Yajra\\DataTables\\DataTablesServiceProvider',
     ),
   ),
 );
