@@ -15,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'permission'          => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role'                => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'role_or_permission'  => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            'admin.auth' => \App\Http\Middleware\AdminAuth::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PermissionController;
 
-
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->as('admin.')->group(function () {
 
     // ----------- Admin Guest Routes (Not logged in) ------------
     Route::middleware('guest')->group(function () {
@@ -14,8 +14,9 @@ Route::prefix('admin')->group(function () {
     });
 
     // ----------- Admin Authenticated Routes ------------
-    Route::middleware('auth')->group(function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-        Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
+    Route::middleware('admin.auth')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+        Route::resource('permissions', PermissionController::class);
     });
-});// same as admin/dashboard 404 not found
+});
