@@ -65,7 +65,7 @@
                     <ul class="nav nav-treeview">
 
                         <li class="nav-item">
-                            <a href=""
+                            <a href="{{ route('admin.roles.index') }}"
                                 class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Roles</p>

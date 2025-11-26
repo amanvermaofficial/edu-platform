@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\RoleController;
 
 Route::prefix('admin')->as('admin.')->group(function () {
 
@@ -18,5 +19,6 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [LoginController::class, 'logout'])->name('logout');
         Route::resource('permissions', PermissionController::class);
+        Route::resource('roles', RoleController::class);
     });
 });

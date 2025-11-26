@@ -7,7 +7,7 @@ use Spatie\Permission\Models\Permission;
 class PermissionRepository
 {
     public function getAll(){
-        return Permission::orderBy('id','DESC')->get();
+        return Permission::orderBy('name')->get();
     }
 
     public function find($id)

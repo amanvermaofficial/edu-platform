@@ -33,7 +33,7 @@ class PermissionController extends Controller
 
     public function store(PermissionRequest $request)
     {
-        $this->service->create($request->validate());
+        $this->service->create($request->validated());
 
         return redirect()->route('admin.permissions.index')->with('success', 'Permission Created!');
     }
@@ -46,7 +46,7 @@ class PermissionController extends Controller
     public function update(PermissionRequest $request, Permission $permission)
     {
 
-        $this->service->update($permission, $request->validate());
+        $this->service->update($permission, $request->validated());
 
         return redirect()->route('admin.permissions.index')->with('success', 'Permission Updated!');
     }
