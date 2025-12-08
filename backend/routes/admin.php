@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use Route as GlobalRoute;
 
 Route::prefix('admin')->as('admin.')->group(function () {
 
@@ -20,5 +22,9 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::post('logout', [LoginController::class, 'logout'])->name('logout');
         Route::resource('permissions', PermissionController::class);
         Route::resource('roles', RoleController::class);
+        Route::resource('users', UserController::class);
+        Route::get('users/{user}/reset-password', [UserController::class, 'resetPassword'])
+        ->name('users.reset-password');
+        Route::put('users/{user}/reset-password',[UserController::class,'updatePassword'])->name('users.reset-password.update-password');
     });
 });
