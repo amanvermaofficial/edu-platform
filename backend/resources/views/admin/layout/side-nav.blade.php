@@ -83,6 +83,36 @@
                     </ul>
                 </li>
 
+                <li
+                    class="nav-item {{ request()->routeIs('admin.courses.*') || request()->routeIs('admin.trades.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link">
+                        <p>
+                            Courses & Trades
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.courses.index') }}"
+                                class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Courses</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.trades.index') }}"
+                                class="nav-link {{ request()->routeIs('admin.trades.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Permissions</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

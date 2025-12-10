@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\CourseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\api\v1\TradeController;
 use Route as GlobalRoute;
 
 Route::prefix('admin')->as('admin.')->group(function () {
@@ -26,5 +28,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::get('users/{user}/reset-password', [UserController::class, 'resetPassword'])
         ->name('users.reset-password');
         Route::put('users/{user}/reset-password',[UserController::class,'updatePassword'])->name('users.reset-password.update-password');
+        Route::resource('courses', CourseController::class);
+        Route::resource('trades', TradeController::class);
     });
 });
