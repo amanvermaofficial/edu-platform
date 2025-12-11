@@ -106,7 +106,7 @@
                             <a href="{{ route('admin.trades.index') }}"
                                 class="nav-link {{ request()->routeIs('admin.trades.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Permissions</p>
+                                <p>Trades</p>
                             </a>
                         </li>
 

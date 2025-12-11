@@ -6,8 +6,9 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\TradeController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\api\v1\TradeController;
+
 use Route as GlobalRoute;
 
 Route::prefix('admin')->as('admin.')->group(function () {
