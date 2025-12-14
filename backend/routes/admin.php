@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\CourseTradeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -27,9 +28,12 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('roles', RoleController::class);
         Route::resource('users', UserController::class);
         Route::get('users/{user}/reset-password', [UserController::class, 'resetPassword'])
-        ->name('users.reset-password');
-        Route::put('users/{user}/reset-password',[UserController::class,'updatePassword'])->name('users.reset-password.update-password');
+            ->name('users.reset-password');
+        Route::put('users/{user}/reset-password', [UserController::class, 'updatePassword'])->name('users.reset-password.update-password');
         Route::resource('courses', CourseController::class);
         Route::resource('trades', TradeController::class);
-    });
+        Route::get('courses/{course}/map-trades', [CourseTradeController::class, 'index'])->name('courses.map-trades'); 
+        Route::post('courses/{course}/map-trades', [CourseTradeController::class, 'update'])->name('courses.map-trades.update');
+    });           
+       
 });

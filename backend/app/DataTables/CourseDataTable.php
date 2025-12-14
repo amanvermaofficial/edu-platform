@@ -20,9 +20,14 @@ class CourseDataTable extends DataTable
               ->addColumn('actions', function ($row) {
                 $editUrl = route('admin.courses.edit', $row->id);
                 $deleteUrl = route('admin.courses.destroy', $row->id);
+                   $mapUrl    = route('admin.courses.map-trades', $row->id);
+
                 
                 return '
-                    <div class="btn-group" role="group">
+                    <a href="' . $mapUrl . '" class="btn btn-sm btn-warning">
+                <i class="fas fa-link"></i> 
+            </a>
+
                         <a href="' . $editUrl . '" class="btn btn-sm btn-info" title="Edit">
                             <i class="fas fa-edit"></i>
                         </a>
