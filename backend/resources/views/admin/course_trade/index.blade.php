@@ -64,8 +64,8 @@
 @push('scripts')
     <script>
         $('.select2').select2({
-            theme: 'bootstrap4',
             placeholder: 'Select trades',
+            theme: 'bootstrap4',
             allowClear: true,
             width: '100%'
         });

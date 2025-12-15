@@ -52,6 +52,13 @@
                         <p>Users</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.quizzes.index') }}"
+                        class="nav-link {{ request()->routeIs('admin.quizzes.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-question-circle"></i>
+                        <p>Quizzes</p>
+                    </a>
+                </li>
 
                 <li
                     class="nav-item {{ request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'menu-open' : '' }}">

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TradeController;
 use App\Http\Controllers\Admin\UserController;
@@ -34,6 +35,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('trades', TradeController::class);
         Route::get('courses/{course}/map-trades', [CourseTradeController::class, 'index'])->name('courses.map-trades'); 
         Route::post('courses/{course}/map-trades', [CourseTradeController::class, 'update'])->name('courses.map-trades.update');
+        Route::resource('quizzes', QuizController::class);
     });           
        
 });
