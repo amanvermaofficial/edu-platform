@@ -36,7 +36,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-               
+
                 <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}"
                         class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
@@ -52,13 +52,45 @@
                         <p>Users</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.quizzes.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.quizzes.*') ? 'active' : '' }}">
+                <li class="nav-item {{ request()->routeIs('admin.quizzes.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-question-circle"></i>
-                        <p>Quizzes</p>
+                        <p>
+                            Quizzes
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
                     </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.quizzes.index') }}"
+                                class="nav-link {{ request()->routeIs('admin.quizzes.index') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>All Quizzes</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.quiz.questions.import') }}"
+                                class="nav-link {{ request()->routeIs('admin.quiz.questions.import') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Upload Questions (CSV)</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.quiz-attempts.index') }}"
+                                class="nav-link {{ request()->routeIs('admin.quiz-attempts.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-clipboard-list"></i>
+                                <p>Quiz Attempts</p>
+                            </a>
+                        </li>
+
+
+                    </ul>
                 </li>
+
 
                 <li
                     class="nav-item {{ request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'menu-open' : '' }}">
@@ -117,7 +149,7 @@
                             </a>
                         </li>
 
-       
+
 
                     </ul>
                 </li>

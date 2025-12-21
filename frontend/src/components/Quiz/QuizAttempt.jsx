@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import { FaQuestionCircle } from "react-icons/fa";
 import { startQuizAttempt } from "../../services/quizService";
 import { useCountdown } from "../../hooks/useCountdown";
+import Swal from "sweetalert2";
+
 
 function QuizAttempt() {
   const { quizId } = useParams();
@@ -16,10 +18,10 @@ function QuizAttempt() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const [attemptInfo,setAttemptInfo] = useState(null)
+  const [attemptInfo, setAttemptInfo] = useState(null)
 
-  
-const { timeLeft, formatTime } = useCountdown(attemptInfo?.end_time);
+
+  const { timeLeft, formatTime } = useCountdown(attemptInfo?.end_time);
 
 
   useEffect(() => {
@@ -33,17 +35,17 @@ const { timeLeft, formatTime } = useCountdown(attemptInfo?.end_time);
         setQuiz(res.data?.data?.quiz);
       } catch (error) {
         toast.error("Failed to load quiz");
-         navigate(-1);
+        navigate(-1);
       } finally {
         setLoading(false);
       }
     };
-     initializeQuiz();
+    initializeQuiz();
   }, [quizId]);
 
-  useEffect(()=>{
-    if(timeLeft === 0) handleSubmit();
-  },[timeLeft])
+  useEffect(() => {
+    if (timeLeft === 0) handleSubmit();
+  }, [timeLeft])
 
 
 
@@ -61,21 +63,31 @@ const { timeLeft, formatTime } = useCountdown(attemptInfo?.end_time);
   };
 
   const handleSubmit = async () => {
-    if (!window.confirm("Are you sure you want to submit your answers?")) return;
+    Swal.fire({
+      title: "Submit Quiz?",
+      text: "Are you sure you want to submit your answers?",
+      icon: "warning",
+      confirmButtonText: "OK",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const formattedAnswers = Object.keys(answers).map((questionId) => ({
+            question_id: parseInt(questionId),
+            selected_option_id: answers[questionId],
+          }));
 
-    try {
-      const formattedAnswers = Object.keys(answers).map((questionId) => ({
-        question_id: parseInt(questionId),
-        selected_option_id: answers[questionId],
-      }));
-
-      const res = await submitQuiz(quizId, formattedAnswers);
-      dispatch(setResult(res.data.data));
-      navigate("/quiz-result");
-    } catch (error) {
-      toast.error("Failed to submit quiz");
-    }
+          const res = await submitQuiz(quizId, formattedAnswers);
+          dispatch(setResult(res.data.data));
+          navigate("/quiz-result");
+        } catch (error) {
+          Swal.fire("Error", "Failed to submit quiz", "error");
+        }
+      }
+    });
   };
+
 
   // 🟡 Loading State
   if (loading) {
@@ -96,7 +108,24 @@ const { timeLeft, formatTime } = useCountdown(attemptInfo?.end_time);
     );
   }
 
-  const question = quiz.questions[currentIndex];
+  const questions = quiz?.questions || [];
+  const question = questions[currentIndex];
+  if (!quiz.questions || quiz.questions.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-[80vh]">
+        <p className="text-gray-600 text-lg">No questions available.</p>
+      </div>
+    );
+  }
+
+  if (!question) {
+    return (
+      <div className="flex justify-center items-center h-[80vh]">
+        <p className="text-gray-600 text-lg">Loading question...</p>
+      </div>
+    );
+  }
+
 
   // 🟢 Main UI
   return (
@@ -117,7 +146,7 @@ const { timeLeft, formatTime } = useCountdown(attemptInfo?.end_time);
 
           {/* Timer (dummy for now) */}
           <div className="text-lg font-semibold tracking-wide">
-            ⏱️{ timeLeft !==null ? formatTime(timeLeft) : 'Loading..'}
+            ⏱️{timeLeft !== null ? formatTime(timeLeft) : 'Loading..'}
           </div>
         </div>
 
@@ -137,16 +166,16 @@ const { timeLeft, formatTime } = useCountdown(attemptInfo?.end_time);
         {/* Question */}
         <div className="mb-5">
           <p className="font-semibold text-base sm:text-lg text-gray-900 mb-3 leading-relaxed">
-            {question.question_text}
+            {question?.question_text}
           </p>
 
           <div className="space-y-3">
-            {question.options.map((option) => (
+            {question?.options?.map((option) => (
               <label
                 key={option.id}
                 className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-all duration-200 text-sm sm:text-base ${answers[question.id] === option.id
-                    ? "bg-amber-50 border-amber-500 text-amber-700 shadow-sm"
-                    : "bg-white border-gray-300 hover:bg-gray-50"
+                  ? "bg-amber-50 border-amber-500 text-amber-700 shadow-sm"
+                  : "bg-white border-gray-300 hover:bg-gray-50"
                   }`}
               >
                 <input

@@ -64,6 +64,12 @@ class QuizService
         try {
             $student = Auth::guard('sanctum')->user();
 
+            if ($quiz->questions()->count() === 0) {
+                return [
+                    'success' => false,
+                    'message' => 'This quiz has no questions yet.'
+                ];
+            }
             $activeAttempt = $this->repo->findActiveAttempt($student->id, $quiz->id);
 
             if ($activeAttempt) {
@@ -79,7 +85,7 @@ class QuizService
                 ];
             }
 
-      
+
             $attempt = $this->repo->createAttempt(
                 $student->id,
                 $quiz->id,
@@ -131,7 +137,7 @@ class QuizService
             $questions = $quiz->questions;
             $totalQuestions = $quiz->questions()->count();
 
-           
+
 
             foreach ($questions as $question) {
                 $answer = collect($answers)->firstWhere('question_id', $question->id);
