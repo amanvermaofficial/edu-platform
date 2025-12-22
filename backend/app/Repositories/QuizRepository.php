@@ -92,8 +92,7 @@ class QuizRepository
       public function findAttempt($studentId, $quizId)
     {
         return QuizAttempt::where('student_id', $studentId)
-            ->where('quiz_id', $quizId)
-            ->latest()
+            ->where('quiz_id', $quizId)  
             ->first();
     }
 }

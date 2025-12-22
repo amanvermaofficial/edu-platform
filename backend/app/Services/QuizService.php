@@ -70,21 +70,28 @@ class QuizService
                     'message' => 'This quiz has no questions yet.'
                 ];
             }
-            $activeAttempt = $this->repo->findActiveAttempt($student->id, $quiz->id);
 
-            if ($activeAttempt) {
+            $attempt = $this->repo->findAttempt($student->id, $quiz->id);
+
+            if ($attempt && $attempt->end_time && $attempt->score !== null) {
                 return [
-                    'success' => true,
-                    'message' => 'Quiz already started.',
-                    'data' => [
-                        'quiz' => $quiz,
-                        'duration' => $activeAttempt->duration,
-                        'start_time' => $activeAttempt->start_time,
-                        'end_time' => $activeAttempt->end_time,
-                    ]
+                    'success' => false,
+                    'status' => 'COMPLETED',
+                    'message' => 'You have already attempted this quiz.'
                 ];
             }
 
+            if ($attempt && $attempt->score === null) {
+                return [
+                    'success' => true,
+                    'status'  => 'RESUME',
+                    'data' => [
+                        'attempt_id' => $attempt->id,
+                        'start_time' => $attempt->start_time,
+                        'end_time'   => $attempt->end_time,
+                    ]
+                ];
+            }
 
             $attempt = $this->repo->createAttempt(
                 $student->id,
@@ -96,6 +103,7 @@ class QuizService
 
             return [
                 'success' => true,
+                'status'  => 'START',
                 'message' => 'Quiz started successfully',
                 'data' => [
                     'quiz' => $quiz,
@@ -122,6 +130,10 @@ class QuizService
 
             if (!$attempt) {
                 throw new Exception('No active quiz attempt found.');
+            }
+
+            if ($attempt->end_time !== null) {
+                throw new Exception('Quiz already submitted.');
             }
 
             $currentTime = now();
