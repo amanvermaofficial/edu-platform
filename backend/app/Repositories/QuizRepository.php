@@ -70,17 +70,18 @@ class QuizRepository
         ]);
     }
 
-    public function updateAttemptResult($attempt, $score, $correct, $wrong)
+    public function updateAttemptResult($attempt, $score, $correct, $wrong, $skipped)
     {
         return $attempt->update([
             'score' => $score,
             'correct_answers' => $correct,
             'wrong_answers' => $wrong,
+            'skipped_questions' => $skipped,
             'end_time' => now(),
         ]);
     }
 
-    
+
     public function findActiveAttempt($studentId, $quizId)
     {
         return QuizAttempt::where('student_id', $studentId)
@@ -89,10 +90,30 @@ class QuizRepository
             ->first();
     }
 
-      public function findAttempt($studentId, $quizId)
+    public function findAttempt($studentId, $quizId)
     {
         return QuizAttempt::where('student_id', $studentId)
-            ->where('quiz_id', $quizId)  
+            ->where('quiz_id', $quizId)
             ->first();
+    }
+
+    public function findCompletedAttempt($studentId, $quizId)
+    {
+        return QuizAttempt::where('student_id', $studentId)
+            ->where('quiz_id', $quizId)
+            ->whereNotNull('score')
+            ->latest()
+            ->first();
+    }
+
+    public function getAttemptAnswers($attemptId)
+    {
+        return QuizAttemptAnswer::where('quiz_attempt_id', $attemptId)
+            ->get([
+                'question_id',
+                'selected_option',
+                'correct_option',
+                'is_correct'
+            ]);
     }
 }

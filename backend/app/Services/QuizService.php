@@ -73,7 +73,7 @@ class QuizService
 
             $attempt = $this->repo->findAttempt($student->id, $quiz->id);
 
-            if ($attempt && $attempt->end_time && $attempt->score !== null) {
+            if ($attempt && $attempt->score !== null) {
                 return [
                     'success' => false,
                     'status' => 'COMPLETED',
@@ -81,17 +81,9 @@ class QuizService
                 ];
             }
 
-            if ($attempt && $attempt->score === null) {
-                return [
-                    'success' => true,
-                    'status'  => 'RESUME',
-                    'data' => [
-                        'attempt_id' => $attempt->id,
-                        'start_time' => $attempt->start_time,
-                        'end_time'   => $attempt->end_time,
-                    ]
-                ];
-            }
+
+
+
 
             $attempt = $this->repo->createAttempt(
                 $student->id,
@@ -120,89 +112,207 @@ class QuizService
         }
     }
 
+    // public function submitQuiz($request, $quiz)
+    // {
+    //     try {
+    //         $student = Auth::guard('sanctum')->user();
+    //         $answers = $request->input('answers');
+
+    //         $attempt = $this->repo->findAttempt($student->id, $quiz->id);
+
+    //         if (!$attempt) {
+    //             throw new Exception('No active quiz attempt found.');
+    //         }
+
+    //         $expired = now()->greaterThan($attempt->end_time);
+
+    //         $score = $correct = $wrong = $skipped = 0;
+
+    //         $questions = $quiz->questions;
+    //         $totalQuestions = $quiz->questions()->count();
+
+
+
+    //         foreach ($questions as $question) {
+    //             $answer = collect($answers)->firstWhere('question_id', $question->id);
+
+    //             if (!$answer) {
+    //                 $skipped++;
+    //                 $this->repo->saveAttemptAnswer(
+    //                     $attempt->id,
+    //                     $question,
+    //                     null,
+    //                     $this->repo->getCorrectOption($question->id),
+    //                     false
+    //                 );
+    //                 continue;
+    //             }
+    //             $selectedOption = $this->repo->getOption($answer['selected_option_id']);
+    //             $correctOption = $this->repo->getCorrectOption($question->id);
+
+    //             $isCorrect = $selectedOption && $correctOption && $selectedOption->id == $correctOption->id;
+
+    //             if ($isCorrect) {
+    //                 $score++;
+    //                 $correct++;
+    //             } else {
+    //                 $wrong++;
+    //             }
+
+    //             $this->repo->saveAttemptAnswer(
+    //                 $attempt->id,
+    //                 $question,
+    //                 $selectedOption,
+    //                 $correctOption,
+    //                 $isCorrect
+    //             );
+    //         }
+
+    //         $this->repo->updateAttemptResult($attempt, $score, $correct, $wrong,$skipped);
+
+    //         return [
+    //             'success' => true,
+    //             'message' => $expired ? 'Time limit exceeded, quiz auto-submitted.' : 'Quiz submitted successfully',
+    //             'data' => [
+    //                 'score' => $score,
+    //                 'correct_answer' => $correct,
+    //                 'wrong_answers' => $wrong,
+    //                 'skipped_questions' => $skipped,
+    //                 'total_questions' => $totalQuestions
+    //             ],
+    //         ];
+    //     } catch (Exception $e) {
+    //         return [
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ];
+    //     }
+    // }
+
     public function submitQuiz($request, $quiz)
-    {
-        try {
-            $student = Auth::guard('sanctum')->user();
-            $answers = $request->input('answers');
+{
+    try {
+        $student = Auth::guard('sanctum')->user();
+        $answers = collect($request->input('answers'));
 
-            $attempt = $this->repo->findAttempt($student->id, $quiz->id);
+        $attempt = $this->repo->findActiveAttempt($student->id, $quiz->id);
 
-            if (!$attempt) {
-                throw new Exception('No active quiz attempt found.');
-            }
+        if (!$attempt) {
+            throw new Exception('No active quiz attempt found.');
+        }
 
-            if ($attempt->end_time !== null) {
-                throw new Exception('Quiz already submitted.');
-            }
+        $expired = now()->greaterThan($attempt->end_time);
 
-            $currentTime = now();
+        // Load questions with correct options (NO N+1)
+        $questions = $quiz->questions()->with('options')->get();
+        $totalQuestions = $questions->count();
 
-            if ($currentTime->greaterThan($attempt->end_time)) {
-                $expired = true;
-            } else {
-                $expired = false;
-            }
+        $score = $correct = $wrong = $skipped = 0;
 
-            $score = $correct = $wrong = $skipped = 0;
+        // Index answers by question_id
+        $answersByQuestion = $answers->keyBy('question_id');
 
-            $questions = $quiz->questions;
-            $totalQuestions = $quiz->questions()->count();
+        // Remove old answers if resubmitting
+        $attempt->answers()->delete();
 
+        foreach ($questions as $question) {
 
+            $correctOption = $question->options->firstWhere('is_correct', true);
+            $answer = $answersByQuestion->get($question->id);
 
-            foreach ($questions as $question) {
-                $answer = collect($answers)->firstWhere('question_id', $question->id);
-
-                if (!$answer) {
-                    $skipped++;
-                    $this->repo->saveAttemptAnswer(
-                        $attempt->id,
-                        $question,
-                        null,
-                        $this->repo->getCorrectOption($question->id),
-                        false
-                    );
-                    continue;
-                }
-                $selectedOption = $this->repo->getOption($answer['selected_option_id']);
-                $correctOption = $this->repo->getCorrectOption($question->id);
-
-                $isCorrect = $selectedOption && $correctOption && $selectedOption->id == $correctOption->id;
-
-                if ($isCorrect) {
-                    $score++;
-                    $correct++;
-                } else {
-                    $wrong++;
-                }
-
+            if (!$answer) {
+                $skipped++;
                 $this->repo->saveAttemptAnswer(
                     $attempt->id,
                     $question,
-                    $selectedOption,
+                    null,
                     $correctOption,
-                    $isCorrect
+                    false
                 );
+                continue;
             }
 
-            $this->repo->updateAttemptResult($attempt, $score, $correct, $wrong);
+            $selectedOption = $question->options
+                ->firstWhere('id', $answer['selected_option_id']);
+
+            $isCorrect = $selectedOption &&
+                $correctOption &&
+                $selectedOption->id === $correctOption->id;
+
+            match ($isCorrect) {
+                true => [$score++, $correct++],
+                false => $wrong++
+            };
+
+            $this->repo->saveAttemptAnswer(
+                $attempt->id,
+                $question,
+                $selectedOption,
+                $correctOption,
+                $isCorrect
+            );
+        }
+
+        $this->repo->updateAttemptResult(
+            $attempt,
+            $score,
+            $correct,
+            $wrong,
+            $skipped
+        );
+
+        return [
+            'success' => true,
+            'message' => $expired
+                ? 'Time limit exceeded, quiz auto-submitted.'
+                : 'Quiz submitted successfully',
+            'data' => [
+                'score' => $score,
+                'correct_answers' => $correct,
+                'wrong_answers' => $wrong,
+                'skipped_questions' => $skipped,
+                'total_questions' => $totalQuestions
+            ]
+        ];
+    } catch (Exception $e) {
+        return [
+            'success' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+}
+
+
+    public function getQuizResult(Quiz $quiz)
+    {
+        try {
+            $student = Auth::guard('sanctum')->user();
+            $attempt = $this->repo->findCompletedAttempt($student->id, $quiz->id);
+
+            if (!$attempt) {
+                throw new Exception('No completed attempt found for this quiz.');
+            }
+
+            $answers = $this->repo->getAttemptAnswers($attempt->id);
 
             return [
                 'success' => true,
-                'message' => $expired ? 'Time limit exceeded, quiz auto-submitted.' : 'Quiz submitted successfully',
+                'message' => 'Quiz result fetched successfully',
                 'data' => [
-                    'score' => $score,
-                    'correct_answer' => $correct,
-                    'wrong_answers' => $wrong,
-                    'skipped_questions' => $skipped,
-                    'total_questions' => $totalQuestions
-                ],
+                    'quiz_id' => $quiz->id,
+                    'score' => $attempt->score,
+                    'total_questions' => $attempt->total_questions,
+                    'correct_answers' => $attempt->correct_answers,
+                    'wrong_answers' => $attempt->wrong_answers,
+                    'skipped_questions' => $attempt->skipped_questions,
+                    'attempted_at' => $attempt->created_at,
+                    'answers' => $answers
+                ]
             ];
         } catch (Exception $e) {
             return [
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => $e->getMessage()
             ];
         }
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getQuizById, submitQuiz } from "../../services/quizService";
@@ -23,12 +23,24 @@ function QuizAttempt() {
 
   const { timeLeft, formatTime } = useCountdown(attemptInfo?.end_time);
 
+  const startedRef = useRef(false);
+
 
   useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+
     const initializeQuiz = async () => {
       try {
         setLoading(true);
         const startRes = await startQuizAttempt(quizId);
+        const status = startRes.data?.status || startRes.data?.data?.status;
+        console.log(status)
+        if (status === "COMPLETED") {
+          toast.info("You have already m attempted this quiz");
+          navigate(`/quiz-result/${quizId}`);
+          return;
+        }
         setAttemptInfo(startRes.data?.data);
 
         const res = await getQuizById(quizId);
@@ -56,9 +68,21 @@ function QuizAttempt() {
     }));
   };
 
+
+  const isNavigatingRef = useRef(false)
+
   const handleNext = () => {
+    if (isNavigatingRef.current) return;
+    isNavigatingRef.current = true;
     if (currentIndex < quiz.questions.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
+      setCurrentIndex(prev => {
+        const nextIndex = Math.min(prev + 1, quiz.questions.length - 1);
+        return nextIndex;
+      });
+
+      setTimeout(() => {
+        isNavigatingRef.current = false;
+      }, 100)
     }
   };
 
@@ -80,7 +104,7 @@ function QuizAttempt() {
 
           const res = await submitQuiz(quizId, formattedAnswers);
           dispatch(setResult(res.data.data));
-          navigate("/quiz-result");
+          navigate(`/quiz-result/${quizId}`);
         } catch (error) {
           Swal.fire("Error", "Failed to submit quiz", "error");
         }
@@ -99,14 +123,14 @@ function QuizAttempt() {
     );
   }
 
-  // ❌ No quiz found
-  if (!quiz) {
+   if (!quiz)
     return (
-      <div className="flex justify-center items-center h-[80vh] bg-amber-50">
-        <p className="text-red-500 text-lg font-semibold">Quiz not found.</p>
+      <div className="flex flex-col justify-center items-center h-[80vh] space-y-4 bg-amber-50">
+        <div className="h-12 w-12 rounded-full bg-amber-500 animate-pulse"></div>
+        <p className="text-amber-700 text-lg animate-pulse">Loading...</p>
       </div>
     );
-  }
+
 
   const questions = quiz?.questions || [];
   const question = questions[currentIndex];

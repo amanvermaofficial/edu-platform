@@ -68,7 +68,7 @@ const router = createBrowserRouter([
         )
       },
       {
-        path:'/quiz-result',
+        path:'/quiz-result/:quizId',
         element:(
           <AuthLayout authentication={true}>
             <QuizResult />

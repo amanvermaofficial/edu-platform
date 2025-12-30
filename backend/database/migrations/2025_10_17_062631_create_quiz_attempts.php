@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('total_questions');
             $table->integer('correct_answers')->default(0);
             $table->integer('wrong_answers')->default(0);
+            $table->integer('skipped_questions')->default(0);
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
             $table->integer('duration')->default(0);

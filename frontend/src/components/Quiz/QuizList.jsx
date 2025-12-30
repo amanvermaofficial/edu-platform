@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getQuizzes } from "../../services/quizService";
+import { getQuizzes, startQuizAttempt } from "../../services/quizService";
 import { setQuizzes } from "../../store/quizSlice";
 import Skeleton from "@mui/material/Skeleton";
 import { FaClipboardList, FaPlay } from "react-icons/fa";
@@ -15,6 +15,7 @@ function QuizList() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [clickedQuizId, setClickedQuizId] = useState(null); // Track which quiz is being started
 
   useEffect(() => {
     async function fetchQuizzes() {
@@ -33,6 +34,36 @@ function QuizList() {
     fetchQuizzes();
   }, [courseId, tradeId, dispatch]);
 
+  // Handle Start Quiz Click
+  const handleStartQuiz = async (quizId) => {
+    // Prevent double-click
+    if (clickedQuizId === quizId) {
+      toast.warning("Quiz is already starting...");
+      return;
+    }
+
+    setClickedQuizId(quizId);
+
+    try {
+      // Optional: Call API to start quiz attempt
+      // const response = await startQuizAttempt(quizId);
+      // if (!response.success) {
+      //   toast.error(response.message);
+      //   setClickedQuizId(null);
+      //   return;
+      // }
+
+      // Navigate to quiz
+      navigate(
+        `/courses/${courseId}/trades/${tradeId}/quizzes/${quizId}/attempt`
+      );
+    } catch (err) {
+      console.error("Error starting quiz:", err);
+      toast.error("Failed to start quiz. Please try again.");
+      setClickedQuizId(null);
+    }
+  };
+
   // 🟡 Loading State
   if (loading) {
     return (
@@ -48,7 +79,12 @@ function QuizList() {
             >
               <Skeleton variant="text" width="70%" height={30} />
               <Skeleton variant="text" width="90%" height={20} />
-              <Skeleton variant="rectangular" width="50%" height={36} className="mt-4 rounded" />
+              <Skeleton
+                variant="rectangular"
+                width="50%"
+                height={36}
+                className="mt-4 rounded"
+              />
             </div>
           ))}
         </div>
@@ -107,12 +143,15 @@ function QuizList() {
               {quiz.description || "Test your knowledge with this quiz!"}
             </p>
             <button
-              onClick={() =>
-                navigate(`/courses/${courseId}/trades/${tradeId}/quizzes/${quiz.id}/attempt`)
-              }
-              className="flex items-center justify-center gap-2 px-4 py-2 w-full bg-amber-600 text-white rounded-full font-medium hover:bg-amber-700 transition-all"
+              onClick={() => handleStartQuiz(quiz.id)}
+              disabled={clickedQuizId === quiz.id} // Disable if this quiz is being started
+              className={`flex items-center justify-center gap-2 px-4 py-2 w-full rounded-full font-medium transition-all ${
+                clickedQuizId === quiz.id
+                  ? "bg-amber-400 text-white cursor-not-allowed opacity-70" // Disabled state
+                  : "bg-amber-600 text-white hover:bg-amber-700" // Normal state
+              }`}
             >
-              <FaPlay /> Start Quiz
+              <FaPlay /> {clickedQuizId === quiz.id ? "Starting..." : "Start Quiz"}
             </button>
           </div>
         ))}

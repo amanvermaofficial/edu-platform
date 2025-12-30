@@ -13,6 +13,7 @@ class QuizAttempt extends Model
         'total_questions',
         'correct_answers',
         'wrong_answers',
+        'skipped_questions',
         'start_time',
         'end_time',
         'duration',

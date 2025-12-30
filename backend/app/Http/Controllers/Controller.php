@@ -10,33 +10,49 @@ use Illuminate\Http\JsonResponse;
 
 abstract class Controller extends BaseController
 {
-    use AuthorizesRequests,DispatchesJobs,ValidatesRequests;
-    protected function successResponse(string $message,$data = []):JsonResponse{
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    protected function successResponse(string $message, $data = []): JsonResponse
+    {
         return response()->json([
-            'success'=>true,
-            'message'=>$message,
-            'data'=>$data
+            'success' => true,
+            'message' => $message,
+            'data' => $data
         ]);
     }
 
-    protected function systemErrorResponse(string $message):JsonResponse{
+    protected function systemErrorResponse(string $message): JsonResponse
+    {
         return response()->json([
-            'success'=>false,
-            'status'=>'error',
-            'message'=>'System error',
-            'errors'=>$message,
-            'data'=>[]
-        ],500);
+            'success' => false,
+            'status' => 'error',
+            'message' => 'System error',
+            'errors' => $message,
+            'data' => []
+        ], 500);
     }
 
-        protected function validationErrorResponse(string $message, $status=422):JsonResponse
+    protected function validationErrorResponse(string $message, $status = 422): JsonResponse
     {
         return response()->json([
             'success' => false,
             'status' => 'error',
             'message' => 'Validation failed!',
-            'errors' =>$message,
+            'errors' => $message,
             'data' => []
         ], $status);
+    }
+
+    protected function businessResponse(
+        string $status,
+        string $message,
+        array $data = [],
+        int $httpStatus = 200
+    ):JsonResponse{
+        return response()->json([
+            'success'=>false,
+            'status'=>$status,
+            'message'=>$message,
+            'data'    => $data
+        ],$httpStatus);
     }
 }

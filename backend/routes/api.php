@@ -30,5 +30,6 @@ Route::prefix('v1')->group(function(){
         Route::get('/quizzes/{quiz}',[QuizController::class,'show']);
         Route::post('/quizzes/{quiz}/submit', [QuizController::class, 'submitQuiz']);
         Route::post('/quizzes/{quiz}/start',[QuizController::class,'startQuiz']);
+        Route::get('/quizzes/{quiz}/result', [QuizController::class, 'quizResult']);
     });
 });

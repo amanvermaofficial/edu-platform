@@ -24,6 +24,7 @@ class QuizController extends Controller
     {
         $this->service = $service;
     }
+    
     public function getQuizzesForCourseTrade(Course $course, Trade $trade)
     {
         $result = $this->service->getQuizzesForCourseTrade($course, $trade);
@@ -46,12 +47,21 @@ class QuizController extends Controller
         return $this->systemErrorResponse($result['message']);
     }
 
-    public function startQuiz(Request $request,Quiz $quiz)
+    public function startQuiz(Request $request, Quiz $quiz)
     {
-        $result = $this->service->startQuiz($request,$quiz);
+        $result = $this->service->startQuiz($request, $quiz);
 
-        if($result['success']){
-            return $this->successResponse($result['message'],$result['data']);
+        if ($result['success']) {
+            return $this->successResponse($result['message'], $result['data']);
+        }
+
+
+        if (isset($result['status']) && $result['status'] !== 'error') {
+            return $this->businessResponse(
+                $result['status'],
+                $result['message'],
+                $result['data'] ?? []
+            );
         }
 
         return $this->systemErrorResponse($result['message']);
@@ -66,5 +76,19 @@ class QuizController extends Controller
         }
 
         return $this->systemErrorResponse($result['message']);
-    }    
+    }
+
+    public function quizResult(Quiz $quiz)
+    {
+        $result = $this->service->getQuizResult($quiz);
+
+        if ($result['success']) {
+            return $this->successResponse(
+                $result['message'],
+                $result['data']
+            );
+        }
+
+        return $this->systemErrorResponse('Unable to fetch quiz result. Please try again later.');
+    }
 }
