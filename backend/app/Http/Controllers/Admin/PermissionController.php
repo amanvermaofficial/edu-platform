@@ -13,10 +13,10 @@ class PermissionController extends Controller
 {
     public function __construct(PermissionService $service)
     {
-        // $this->middleware('permission:view roles')->only('index');
-        // $this->middleware('permission:create roles')->only(['create', 'store']);
-        // $this->middleware('permission:update roles')->only(['edit', 'update']);
-        // $this->middleware('permission:delete roles')->only('destroy');
+        $this->middleware('permission:view.permissions')->only('index');
+        $this->middleware('permission:create.permissions')->only(['create', 'store']);
+        $this->middleware('permission:update.permissions')->only(['edit', 'update']);
+        $this->middleware('permission:delete.permissions')->only('destroy');
 
         $this->service = $service;
     }

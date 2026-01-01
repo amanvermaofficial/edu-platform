@@ -10,9 +10,15 @@ use Illuminate\Http\Request;
 
 class CourseTradeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:courses.map-trades')
+            ->only(['index', 'update']);
+    }
+
     public function index(Course $course)
     {
-         return view('admin.course_trade.index', [
+        return view('admin.course_trade.index', [
             'course' => $course,
             'trades' => Trade::orderBy('name')->get(),
             'mappedTrades' => $course->trades->pluck('id')->toArray(),

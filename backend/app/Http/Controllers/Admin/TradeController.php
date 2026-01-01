@@ -17,6 +17,10 @@ class TradeController extends Controller
     public function __construct(TradeService $service)
     {
         $this->service = $service;
+        $this->middleware('permission:trades.view')->only(['index']);
+        $this->middleware('permission:trades.create')->only(['create', 'store']);
+        $this->middleware('permission:trades.edit')->only(['edit', 'update']);
+        $this->middleware('permission:trades.delete')->only(['destroy']);
     }
     /**
      * Display a listing of the resource.

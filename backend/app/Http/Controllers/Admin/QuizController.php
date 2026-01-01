@@ -17,6 +17,11 @@ class QuizController extends Controller
     public function __construct(QuizService $service)
     {
         $this->service = $service;
+
+        $this->middleware('permission:quizzes.view')->only('index');
+        $this->middleware('permission:quizzes.create')->only(['create', 'store']);
+        $this->middleware('permission:quizzes.update')->only(['edit', 'update']);
+        $this->middleware('permission:quizzes.delete')->only('destroy');
     }
 
     /**

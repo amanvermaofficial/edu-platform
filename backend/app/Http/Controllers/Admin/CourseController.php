@@ -16,6 +16,11 @@ class CourseController extends Controller
     public function __construct(CourseService $service)
     {
         $this->service = $service;
+
+        $this->middleware('permission:courses.view')->only(['index']);
+        $this->middleware('permission:courses.create')->only(['create', 'store']);
+        $this->middleware('permission:courses.edit')->only(['edit', 'update']);
+        $this->middleware('permission:courses.delete')->only(['destroy']);
     }
     /**
      * Display a listing of the resource.
@@ -38,7 +43,7 @@ class CourseController extends Controller
      */
     public function store(CourseRequest $request)
     {
-         $this->service->create($request->validated());
+        $this->service->create($request->validated());
         return redirect()->route('admin.courses.index')->with('success', 'Course created successfully.');
     }
 

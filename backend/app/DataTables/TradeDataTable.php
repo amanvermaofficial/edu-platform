@@ -20,24 +20,28 @@ class TradeDataTable extends DataTable
             ->addColumn('actions', function ($row) {
                 $editUrl = route('admin.trades.edit', $row->id);
                 $deleteUrl = route('admin.trades.destroy', $row->id);
+                $buttons = '<div class="btn-group" role="group">';
 
-                return '
-                    <div class="btn-group" role="group">
-                        <a href="' . $editUrl . '" class="btn btn-sm btn-info" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <form action="' . $deleteUrl . '" method="POST" 
-                            onsubmit="return confirm(\'Are you sure you want to delete this trade?\')" 
-                            style="display:inline-block; margin-left: 5px;">
-                            
-                            ' . csrf_field() . method_field('DELETE') . '
-                            
-                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    </div>
-                ';
+                if (auth()->user()->can('trades.edit')) {
+                    $buttons .= '<a href="' . $editUrl . '" class="btn btn-sm btn-info">
+                <i class="fas fa-edit"></i></a>';
+                }
+
+                if (auth()->user()->can('trades.delete')) {
+                    $buttons .= '
+                    <form action="' . $deleteUrl . '" method="POST"
+                        onsubmit="return confirm(\'Are you sure?\')"
+                        style="display:inline-block; margin-left:5px;">
+                        ' . csrf_field() . method_field('DELETE') . '
+                        <button class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>';
+                }
+
+                $buttons .= '</div>';
+
+                return $buttons;
             })
 
             ->rawColumns(['actions'])

@@ -11,6 +11,12 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class QuizQuestionImportController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:quiz-questions.import')
+            ->only(['create', 'store']);
+    }
+
     public function create()
     {
         $quizzes = Quiz::all();

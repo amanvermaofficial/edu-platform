@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\Admin\RoleService;
 use App\Services\Admin\UserService;
 use Illuminate\Http\Request;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 
 class UserController extends Controller
 {
@@ -20,6 +21,12 @@ class UserController extends Controller
     {
         $this->service = $service;
         $this->roleService = $roleService;
+        $this->middleware('permission:users.view')->only(['index']);
+        $this->middleware('permission:users.create')->only(['create', 'store']);
+        $this->middleware('permission:users.edit')->only(['edit', 'update']);
+        $this->middleware('permission:users.delete')->only(['destroy']);
+        $this->middleware('permission:user.reset-password')
+            ->only(['resetPassword', 'updatePassword']);
     }
     /**
      * Display a listing of the resource.
@@ -62,7 +69,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = $this->roleService->list();
-        return view('admin.users.edit', compact('roles','user'));
+        return view('admin.users.edit', compact('roles', 'user'));
     }
 
     /**
@@ -83,15 +90,15 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
 
-    
+
     public function resetPassword(User $user)
     {
-        return view('admin.users.reset-password',compact('user'));
+        return view('admin.users.reset-password', compact('user'));
     }
 
-    public function updatePassword(User $user,ResetPasswordRequest $request)
+    public function updatePassword(User $user, ResetPasswordRequest $request)
     {
-        $this->service->resetPassword($user,$request->validated());
+        $this->service->resetPassword($user, $request->validated());
         return redirect()->route('admin.users.index')->with('success', 'Password updated successfully');
     }
 }

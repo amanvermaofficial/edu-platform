@@ -15,20 +15,21 @@ class RoleDataTable extends DataTable
             ->addColumn('actions', function ($row) {
                 $editUrl = route('admin.roles.edit', $row->id);
                 $deleteUrl = route('admin.roles.destroy', $row->id);
-                
-                return '
-                    <div class="btn-group" role="group">
-                        <a href="' . $editUrl . '" class="btn btn-sm btn-info" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <form action="' . $deleteUrl . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this permission?\')" style="display:inline-block; margin-left: 5px;">
-                            ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    </div>
-                ';
+
+                $buttons = '<div class="btn-group">';
+
+                if (auth()->user()->can('roles.edit')) {
+                    $buttons .= '<a href="' . $editUrl . '" class="btn btn-sm btn-info"><i class="fas fa-edit"></i></a>';
+                }
+
+                if (auth()->user()->can('roles.delete')) {
+                    $buttons .= '<form action="' . $deleteUrl . '" method="POST" style="display:inline">' . csrf_field() . method_field('DELETE') . '<button class="btn btn-sm btn-danger">
+                <i class="fas fa-trash"></i></button></form>';
+                }
+
+                $buttons .= '</div>';
+
+                return $buttons;
             })
             ->editColumn('created_at', function ($row) {
                 return $row->created_at ? $row->created_at->format('d M Y, h:i A') : '-';
@@ -61,32 +62,32 @@ class RoleDataTable extends DataTable
     {
         return [
             [
-                'data' => 'DT_RowIndex', 
-                'name' => 'DT_RowIndex', 
-                'title' => '#', 
-                'orderable' => false, 
+                'data' => 'DT_RowIndex',
+                'name' => 'DT_RowIndex',
+                'title' => '#',
+                'orderable' => false,
                 'searchable' => false,
                 'width' => '5%',
                 'className' => 'text-center'
             ],
             [
-                'data' => 'name', 
-                'name' => 'name', 
+                'data' => 'name',
+                'name' => 'name',
                 'title' => 'Role Name',
                 'width' => '50%'
             ],
             [
-                'data' => 'created_at', 
-                'name' => 'created_at', 
+                'data' => 'created_at',
+                'name' => 'created_at',
                 'title' => 'Created At',
                 'width' => '25%',
                 'className' => 'text-center'
             ],
             [
-                'data' => 'actions', 
-                'name' => 'actions', 
-                'title' => 'Actions', 
-                'orderable' => false, 
+                'data' => 'actions',
+                'name' => 'actions',
+                'title' => 'Actions',
+                'orderable' => false,
                 'searchable' => false,
                 'width' => '20%',
                 'className' => 'text-center'

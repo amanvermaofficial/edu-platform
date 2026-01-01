@@ -45,115 +45,126 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.users.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>Users</p>
-                    </a>
-                </li>
-                <li class="nav-item {{ request()->routeIs('admin.quizzes.*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-question-circle"></i>
-                        <p>
-                            Quizzes
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
+                @can('users.view')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.users.index') }}"
+                            class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>Users</p>
+                        </a>
+                    </li>
+                @endcan
+                @can('quizzes.view')
+                    <li class="nav-item {{ request()->routeIs('admin.quizzes.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-question-circle"></i>
+                            <p>
+                                Quizzes
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
 
-                    <ul class="nav nav-treeview">
+                        <ul class="nav nav-treeview">
 
-                        <li class="nav-item">
-                            <a href="{{ route('admin.quizzes.index') }}"
-                                class="nav-link {{ request()->routeIs('admin.quizzes.index') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>All Quizzes</p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.quizzes.index') }}"
+                                    class="nav-link {{ request()->routeIs('admin.quizzes.index') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>All Quizzes</p>
+                                </a>
+                            </li>
+                            @can('quiz-questions.import')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.quiz.questions.import') }}"
+                                        class="nav-link {{ request()->routeIs('admin.quiz.questions.import') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Upload Questions (CSV)</p>
+                                    </a>
+                                </li>
+                            @endcan
 
-                        <li class="nav-item">
-                            <a href="{{ route('admin.quiz.questions.import') }}"
-                                class="nav-link {{ request()->routeIs('admin.quiz.questions.import') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Upload Questions (CSV)</p>
-                            </a>
-                        </li>
+                            @can('quiz-attempts.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.quiz-attempts.index') }}"
+                                        class="nav-link {{ request()->routeIs('admin.quiz-attempts.*') ? 'active' : '' }}">
+                                        <i class="nav-icon fas fa-clipboard-list"></i>
+                                        <p>Quiz Attempts</p>
+                                    </a>
+                                </li>
+                            @endcan
 
-                        <li class="nav-item">
-                            <a href="{{ route('admin.quiz-attempts.index') }}"
-                                class="nav-link {{ request()->routeIs('admin.quiz-attempts.*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-clipboard-list"></i>
-                                <p>Quiz Attempts</p>
-                            </a>
-                        </li>
+                        </ul>
+
+                    </li>
+                @endcan
+                @can('roles.view')
+                    <li
+                        class="nav-item {{ request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link">
+                            <p>
+                                Roles & Permissions
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+                            @can('roles.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.roles.index') }}"
+                                        class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Roles</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('permissions.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.permissions.index') }}"
+                                        class="nav-link {{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Permissions</p>
+                                    </a>
+                                @endcan
+                            </li>
+
+                        </ul>
+                    </li>
+                @endcan
+                @can('courses.view')
+                    <li
+                        class="nav-item {{ request()->routeIs('admin.courses.*') || request()->routeIs('admin.trades.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link">
+                            <p>
+                                Courses & Trades
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+                            @can('courses.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.courses.index') }}"
+                                        class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Courses</p>
+                                    </a>
+                                @endcan
+                            </li>
+
+                            @can('trades.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.trades.index') }}"
+                                        class="nav-link {{ request()->routeIs('admin.trades.*') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Trades</p>
+                                    </a>
+                                </li>
+                            @endcan
 
 
-                    </ul>
-                </li>
-
-
-                <li
-                    class="nav-item {{ request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link">
-                        <p>
-                            Roles & Permissions
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-
-                    <ul class="nav nav-treeview">
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Roles</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.permissions.index') }}"
-                                class="nav-link {{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Permissions</p>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-
-                <li
-                    class="nav-item {{ request()->routeIs('admin.courses.*') || request()->routeIs('admin.trades.*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link">
-                        <p>
-                            Courses & Trades
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-
-                    <ul class="nav nav-treeview">
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.courses.index') }}"
-                                class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Courses</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.trades.index') }}"
-                                class="nav-link {{ request()->routeIs('admin.trades.*') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Trades</p>
-                            </a>
-                        </li>
-
-
-
-                    </ul>
-                </li>
-
+                        </ul>
+                    </li>
+                @endcan
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -25,11 +25,16 @@ class QuizAttemptDataTable extends DataTable
             ->addColumn('actions', function ($row) {
                 $viewUrl = route('admin.quiz-attempts.show', $row->id);
 
-                return '
-                <a href="' . $viewUrl . '" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                ';
+                $buttons = '';
+
+                if (auth()->user()->can('users.edit')) {
+                    $buttons .= '
+            <a href="' . $viewUrl . '" class="btn btn-sm btn-info">
+                <i class="fas fa-edit"></i>
+            </a>';
+                }
+
+                return '<div class="btn-group">' . $buttons . '</div>';
             })
 
             ->editColumn(
@@ -38,7 +43,7 @@ class QuizAttemptDataTable extends DataTable
                 $row->created_at?->format('d M Y, h:i A')
             )
 
-          ->rawColumns(['actions']);
+            ->rawColumns(['actions']);
     }
 
 

@@ -38,25 +38,25 @@ class QuizDataTable extends DataTable
                 $editUrl   = route('admin.quizzes.edit', $row->id);
                 $deleteUrl = route('admin.quizzes.destroy', $row->id);
 
-                return '
-                    <div class="btn-group" role="group">
+                $buttons = '<div class="btn-group">';
 
-                        <a href="' . $editUrl . '" 
-                           class="btn btn-sm btn-info" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </a>
+                if (auth()->user()->can('quizzes.edit')) {
+                    $buttons .= '<a href="' . $editUrl . '" class="btn btn-sm btn-info"><i class="fas fa-edit"></i></a>';
+                }
 
-                        <form action="' . $deleteUrl . '" method="POST"
-                              onsubmit="return confirm(\'Are you sure you want to delete this quiz?\')"
-                              style="display:inline-block; margin-left:5px;">
-                            ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                if (auth()->user()->can('quizzes.delete')) {
+                    $buttons .= '
+                    <form action="' . $deleteUrl . '" method="POST" style="display:inline">
+                        ' . csrf_field() . method_field('DELETE') . '
+                        <button class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>';
+                }
 
-                    </div>
-                ';
+                $buttons .= '</div>';
+
+                return $buttons;
             })
 
             ->rawColumns(['actions'])

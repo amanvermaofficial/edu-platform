@@ -17,6 +17,11 @@ class RoleController extends Controller
     public function __construct(RoleService $service)
     {
         $this->service = $service;
+
+        $this->middleware('permission:roles.view')->only(['index']);
+        $this->middleware('permission:roles.create')->only(['create', 'store']);
+        $this->middleware('permission:roles.edit')->only(['edit', 'update']);
+        $this->middleware('permission:roles.delete')->only(['destroy']);
     }
 
     /**
@@ -35,7 +40,6 @@ class RoleController extends Controller
         try {
             $permissions = $this->service->getAllPermissions();
             return view('admin.roles.create', compact('permissions'));
-
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -51,7 +55,6 @@ class RoleController extends Controller
 
             return redirect()->route('admin.roles.index')
                 ->with('success', 'Role Created!');
-
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -65,7 +68,6 @@ class RoleController extends Controller
         try {
             $permissions = $this->service->getAllPermissions();
             return view('admin.roles.edit', compact('role', 'permissions'));
-
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -81,7 +83,6 @@ class RoleController extends Controller
 
             return redirect()->route('admin.roles.index')
                 ->with('success', 'Role Updated!');
-
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -97,7 +98,6 @@ class RoleController extends Controller
 
             return redirect()->route('admin.roles.index')
                 ->with('success', 'Role Deleted!');
-
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

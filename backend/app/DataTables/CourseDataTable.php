@@ -17,32 +17,33 @@ class CourseDataTable extends DataTable
                 return ucfirst($row->name);
             })
 
-              ->addColumn('actions', function ($row) {
+            ->addColumn('actions', function ($row) {
                 $editUrl = route('admin.courses.edit', $row->id);
                 $deleteUrl = route('admin.courses.destroy', $row->id);
-                   $mapUrl    = route('admin.courses.map-trades', $row->id);
+                $mapUrl    = route('admin.courses.map-trades', $row->id);
 
-                
-                return '
-                    <a href="' . $mapUrl . '" class="btn btn-sm btn-warning">
-                <i class="fas fa-link"></i> 
-            </a>
 
-                        <a href="' . $editUrl . '" class="btn btn-sm btn-info" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <form action="' . $deleteUrl . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this permission?\')" style="display:inline-block; margin-left: 5px;">
-                            ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    </div>
-                ';
+                $buttons = '<div class="btn-group">';
+
+                if (auth()->user()->can('courses.map-trades')) {
+                    $buttons .= '<a href="' . $mapUrl . '" class="btn btn-sm btn-warning"><i class="fas fa-link"></i></a>';
+                }
+
+                if (auth()->user()->can('courses.edit')) {
+                    $buttons .= '<a href="' . $editUrl . '" class="btn btn-sm btn-info"><i class="fas fa-edit"></i></a>';
+                }
+
+                if (auth()->user()->can('courses.delete')) {
+                    $buttons .= '<form action="' . $deleteUrl . '" method="POST" style="display:inline-block">' . csrf_field() . method_field('DELETE') . '<button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></form>';
+                }
+
+                $buttons .= '</div>';
+
+                return $buttons;
             })
 
 
-            
+
 
             ->rawColumns(['courses', 'actions'])
             ->setRowId('id');

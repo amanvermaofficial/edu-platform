@@ -9,72 +9,81 @@ use Yajra\DataTables\EloquentDataTable;
 class UserDataTable extends DataTable
 {
     public function dataTable($query): EloquentDataTable
-{
-    return (new EloquentDataTable($query))
-        ->addIndexColumn()
+    {
+        return (new EloquentDataTable($query))
+            ->addIndexColumn()
 
-        // USER NAME
-        ->editColumn('name', function ($row) {
-            return ucfirst($row->name);
-        })
+            // USER NAME
+            ->editColumn('name', function ($row) {
+                return ucfirst($row->name);
+            })
 
-        // ROLES WITH MULTIPLE BADGE COLORS
-        ->addColumn('roles', function ($row) {
+            // ROLES WITH MULTIPLE BADGE COLORS
+            ->addColumn('roles', function ($row) {
 
-            if ($row->roles->isEmpty()) {
-                return '<span class="badge badge-secondary">No Role</span>';
-            }
+                if ($row->roles->isEmpty()) {
+                    return '<span class="badge badge-secondary">No Role</span>';
+                }
 
-            return $row->roles->map(function ($role, $index) {
-                return match ($index) {
-                    0 => '<span class="badge badge-primary">' . $role->name . '</span>', // First role
-                    1 => '<span class="badge badge-success">' . $role->name . '</span>', // Second role
-                    default => '<span class="badge badge-warning">' . $role->name . '</span>', // Others
-                };
-            })->implode(' ');
-        })
+                return $row->roles->map(function ($role, $index) {
+                    return match ($index) {
+                        0 => '<span class="badge badge-primary">' . $role->name . '</span>', // First role
+                        1 => '<span class="badge badge-success">' . $role->name . '</span>', // Second role
+                        default => '<span class="badge badge-warning">' . $role->name . '</span>', // Others
+                    };
+                })->implode(' ');
+            })
 
-        // ACTION BUTTONS
-        ->addColumn('actions', function ($row) {
+            // ACTION BUTTONS
+            ->addColumn('actions', function ($row) {
 
-            $editUrl   = route('admin.users.edit', $row->id);
-            $deleteUrl = route('admin.users.destroy', $row->id);
-            $resetUrl  = route('admin.users.reset-password', $row->id);  // NEW RESET PASSWORD ROUTE
+                $editUrl   = route('admin.users.edit', $row->id);
+                $deleteUrl = route('admin.users.destroy', $row->id);
+                $resetUrl  = route('admin.users.reset-password', $row->id);  // NEW RESET PASSWORD ROUTE
 
-            return '
-                <div class="btn-group" role="group">
+                $buttons = '<div class="btn-group">';
 
-                    <!-- Edit -->
-                    <a href="' . $editUrl . '" class="btn btn-sm btn-info" title="Edit">
-                        <i class="fas fa-edit"></i>
-                    </a>
+                if (auth()->user()->can('users.edit')) {
+                    $buttons .= '
+        <a href="' . $editUrl . '" class="btn btn-sm btn-info ms-1">
+            <i class="fas fa-edit"></i>
+        </a>
+    ';
+                }
 
-                    <!-- Reset Password -->
-                    <a href="' . $resetUrl . '" class="btn btn-sm btn-warning" title="Reset Password" style="margin-left:5px;">
-                        <i class="fas fa-key"></i>
-                    </a>
+                if (auth()->user()->can('user.reset-password')) {
+                    $buttons .= '
+        <a href="' . $resetUrl . '" class="btn btn-sm btn-warning mx-1">
+            <i class="fas fa-key"></i>
+        </a>
+    ';
+                }
 
-                    <!-- Delete -->
-                    <form action="' . $deleteUrl . '" method="POST"
-                          onsubmit="return confirm(\'Are you sure you want to delete this user?\')"
-                          style="display:inline-block; margin-left: 5px;">
-                        ' . csrf_field() . method_field('DELETE') . '
-                        <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </form>
+                if (auth()->user()->can('users.delete')) {
+                    $buttons .= '
+        <form action="' . $deleteUrl . '" method="POST" style="display:inline">
+            ' . csrf_field() . method_field('DELETE') . '
+            <button class="btn btn-sm btn-danger">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    ';
+                }
 
-                </div>
-            ';
-        })
+                $buttons .= '</div>';
 
-        ->editColumn('created_at', fn($row) =>
-            $row->created_at ? $row->created_at->format('d M Y, h:i A') : '-'
-        )
+                return $buttons;
+            })
 
-        ->rawColumns(['roles', 'actions'])
-        ->setRowId('id');
-}
+            ->editColumn(
+                'created_at',
+                fn($row) =>
+                $row->created_at ? $row->created_at->format('d M Y, h:i A') : '-'
+            )
+
+            ->rawColumns(['roles', 'actions'])
+            ->setRowId('id');
+    }
 
 
     public function query(User $model)

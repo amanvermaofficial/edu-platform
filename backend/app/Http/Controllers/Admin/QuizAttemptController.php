@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class QuizAttemptController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:quiz-attempts.view')->only('index');
+        $this->middleware('permission:quiz-attempts.show')->only('show');
+    }
+    
     public function index(QuizAttemptDataTable $dataTable){
         return $dataTable->render('admin.quiz_attempts.index');
     }
