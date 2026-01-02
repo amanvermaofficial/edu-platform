@@ -124,9 +124,8 @@
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Permissions</p>
                                     </a>
-                                @endcan
-                            </li>
-
+                                </li>
+                            @endcan
                         </ul>
                     </li>
                 @endcan
