@@ -17,46 +17,14 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $permissionedUser = User::factory()->create([
-            'name' => 'Permissioned User',
-            'email' => 'staff@example.com',
+        $superadmin = User::factory()->create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@example.com',
             'password' => 'password'
         ]);
 
-        $admin = User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => 'password'
-        ]);
-
-        $admin_role = Role::create(['name' => 'admin']);
-        $staff_role = Role::create(['name' => 'staff_manager']);
-
-        $permissions = [
-            'view roles',
-            'create roles',
-            'update roles',
-            'delete roles',
-            'view staff',
-            'create staff',
-            'update staff',
-            'delete staff',
-            'reset staff password',
-        ];
-
-        foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
-        }
-
-        $admin_role->givePermissionTo($permissions);
-        $staff_role->givePermissionTo([
-            'view roles',
-            'view staff',
-            'create staff',
-            'update staff',
-            'reset staff password'
-        ]);
-        $admin->assignRole('admin');
-        $permissionedUser->assignRole('staff_manager');
+        $superadmin_role = Role::create(['name' => 'superadmin']);
+      
+        $superadmin->assignRole('superadmin');
     }
 }

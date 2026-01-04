@@ -13,6 +13,7 @@ class Student extends Authenticatable
     'name',
     'email',
     'phone',
+    'course_id',
     'trade_id',
     'gender',
     'state',
@@ -23,7 +24,10 @@ class Student extends Authenticatable
     'completed_profile',
   ];
 
-  
+  public function course()
+  {
+    return $this->belongsTo(Course::class);
+  }
 
   public function trade()
   {

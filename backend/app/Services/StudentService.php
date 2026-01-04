@@ -21,7 +21,7 @@ class StudentService
     public function getProfile()
     {
         try {
-            $student = Auth::guard('sanctum')->user()->load('trade');
+            $student = Auth::guard('sanctum')->user()->load(['course','trade']); // Auth::user()->load('course','trade');
 
             if (!$student) {
                 return [
@@ -50,7 +50,7 @@ class StudentService
     public function updateProfile($request){
         try {
             $user = Auth::user();
-            $data = $request->only(['name','email','trade_id','gender','state']);
+            $data = $request->only(['name','email','course_id','trade_id','gender','state']);
 
             if($request->hasFile('profile_picture')){
                 $path =$request->file('profile_picture')->store('profile_pictures','public');
@@ -60,7 +60,7 @@ class StudentService
                $data['completed_profile'] = 1;
 
                $updatedUser = $this->repo->update($user, $data);
-               $updatedUser->load('trade');
+               $updatedUser->load(['course','trade']);
 
             return [
                 'success' => true,

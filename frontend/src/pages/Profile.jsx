@@ -72,10 +72,10 @@ function Profile() {
 
           {/* Details Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <InfoCard label="Course" value={userData.course?.name || "—"} />
             <InfoCard label="Trade" value={userData.trade?.name || "—"} />
             <InfoCard label="Gender" value={userData.gender || "—"} />
             <InfoCard label="State" value={userData.state || "—"} />
-            <InfoCard label="District" value={userData.district || "—"} />
           </div>
 
           <div className="mt-10 text-center text-sm text-gray-500">

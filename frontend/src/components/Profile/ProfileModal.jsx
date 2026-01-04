@@ -5,6 +5,7 @@ import {
     DialogContent,
     DialogActions,
     Button,
+    Select,
     MenuItem,
     Avatar,
     IconButton
@@ -14,17 +15,32 @@ import { useForm } from 'react-hook-form';
 import Input from '../Input';
 import { updateProfile } from '../../services/ProfileService'
 import { toast } from 'react-toastify';
-import Select from '../Select';
-import { getTrades } from '../../services/TradeService';
+//import Select from '../Select';
+import { getTradesByCourse } from '../../services/TradeService';
+import { getCourses } from '../../services/CourseService'
 import { useDispatch } from 'react-redux';
 import { setUserData } from "../../store/authSlice";
 import { Controller } from 'react-hook-form';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 3 + ITEM_PADDING_TOP,
+        },
+    },
+};
+
+
 
 function ProfileModal({ open, onClose, defaultValues }) {
     const { register, reset, handleSubmit, control, formState: { errors } } = useForm({ defaultValues });
+    const [courses, setCourses] = useState([]);
+    const [selectedCourse, setSelectedCourse] = useState("");
     const [trades, setTrades] = useState([]);
-      const [preview, setPreview] = useState(defaultValues?.profile_picture || null);
+    const [preview, setPreview] = useState(defaultValues?.profile_picture || null);
     const dispatch = useDispatch();
 
     const onSubmit = async (data) => {
@@ -39,6 +55,7 @@ function ProfileModal({ open, onClose, defaultValues }) {
             // baki saare fields append karo
             formData.append("name", data.name || "");
             formData.append("phone", data.phone || "");
+            formData.append("course_id", data.course_id || "");
             formData.append("trade_id", data.trade_id || "");
             formData.append("gender", data.gender || "");
             formData.append("email", data.email || "");
@@ -64,9 +81,25 @@ function ProfileModal({ open, onClose, defaultValues }) {
     }, [defaultValues, reset]);
 
     useEffect(() => {
+        async function fetchCourses() {
+            try {
+                const res = await getCourses();
+                setCourses(res.data.data.courses);
+            } catch (error) {
+                toast.error("Failed to load courses");
+            }
+        }
+        fetchCourses();
+    }, [])
+
+    useEffect(() => {
+        if (!selectedCourse) {
+            setTrades([]);
+            return;
+        }
         async function fetchTrades() {
             try {
-                const res = await getTrades();
+                const res = await getTradesByCourse(selectedCourse);
                 setTrades(res.data.data.trades);
             } catch (error) {
                 toast.error("Failed to load trades");
@@ -74,9 +107,9 @@ function ProfileModal({ open, onClose, defaultValues }) {
         }
 
         fetchTrades();
-    }, []);
+    }, [selectedCourse]);
 
-       const handleImageChange = (e) => {
+    const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setPreview(URL.createObjectURL(file));
@@ -87,7 +120,7 @@ function ProfileModal({ open, onClose, defaultValues }) {
             <DialogTitle>Update Profile</DialogTitle>
             <DialogContent dividers>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                      <div className="flex flex-col items-center mb-6">
+                    <div className="flex flex-col items-center mb-6">
                         <Avatar
                             src={preview}
                             alt=""
@@ -147,16 +180,50 @@ function ProfileModal({ open, onClose, defaultValues }) {
                     {errors.phone && (<p className="text-red-500">{errors.phone.message}</p>)}
 
                     <Controller
+                        name="course_id"
+                        control={control}
+                        rules={{ required: "Course is required" }}
+                        render={({ field }) => (
+                            <Select
+                                label="Course"
+                                className="mb-4"
+                                MenuProps={MenuProps}
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    setSelectedCourse(e.target.value);
+                                }}
+                            >
+                                <MenuItem value="">
+                                    <em>Select Course</em>
+                                </MenuItem>
+                                {courses.map(course => (
+                                    <MenuItem key={course.id} value={course.id}>
+                                        {course.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        )}
+                    />
+
+                    {errors.course_id && (
+                        <p className="text-red-500 text-sm">{errors.course_id.message}</p>
+                    )}
+
+
+                    <Controller
                         name='trade_id'
                         control={control}
                         rules={{ required: 'Trade is required' }}
                         render={({ field }) => (
-                            <Select label='Trade' className="mb-4" {...field}>
-                                <option value="">Select Trade</option>
+                            <Select label='Trade' className="mb-4" MenuProps={MenuProps} {...field}>
+                                <MenuItem value="">
+                                    <em>Select Trade</em>
+                                </MenuItem>
                                 {trades.map((trade) => (
-                                    <option key={trade.id} value={trade.id}>
+                                    <MenuItem key={trade.id} value={trade.id}>
                                         {trade.name}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         )}
@@ -167,12 +234,13 @@ function ProfileModal({ open, onClose, defaultValues }) {
                     )}
                     <Select
                         label="Gender"
+                        MenuProps={MenuProps}
                         {...register("gender", { required: "Gender is required" })}
                     >
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+                        <MenuItem value="">Select Gender</MenuItem>
+                        <MenuItem value="male">Male</MenuItem>
+                        <MenuItem value="female">Female</MenuItem>
+                        <MenuItem value="other">Other</MenuItem>
                     </Select>
                     {errors.gender && (
                         <p className="text-red-500 text-sm">{errors.gender.message}</p>
@@ -181,9 +249,10 @@ function ProfileModal({ open, onClose, defaultValues }) {
 
                     <Input
                         label="State"
-                        {...register("state", { required: "State is required",
-                         minLength: { value: 2, message: "State name too short" },
-                         })}
+                        {...register("state", {
+                            required: "State is required",
+                            minLength: { value: 2, message: "State name too short" },
+                        })}
                     />
                     {errors.state && (
                         <p className="text-red-500 text-sm">{errors.state.message}</p>

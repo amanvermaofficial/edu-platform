@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('profile_picture')->nullable();
+            $table->unsignedBigInteger('course_id')->nullable();
             $table->unsignedBigInteger('trade_id')->nullable();
             $table->string('gender')->nullable();
             $table->string('state')->nullable();

@@ -25,6 +25,7 @@ class updateProfileRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'course_id' => 'required|exists:courses,id',
             'trade_id' => 'required|string|exists:trades,id',
             'gender' => 'required|in:male,female,other',
             'state' => "required|string|max:255",
