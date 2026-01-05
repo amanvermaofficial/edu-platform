@@ -54,6 +54,16 @@
                         </a>
                     </li>
                 @endcan
+                @can('students.view')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.students.index') }}"
+                            class="nav-link {{ request()->routeIs('admin.students.*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-user-graduate"></i>
+                            <p>Students</p>
+                        </a>
+                    </li>
+                @endcan
+
                 @can('quizzes.view')
                     <li class="nav-item {{ request()->routeIs('admin.quizzes.*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link">

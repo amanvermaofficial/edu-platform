@@ -28,22 +28,23 @@
     24 => 'Laravel\\Pail\\PailServiceProvider',
     25 => 'Laravel\\Sail\\SailServiceProvider',
     26 => 'Laravel\\Sanctum\\SanctumServiceProvider',
-    27 => 'Laravel\\Tinker\\TinkerServiceProvider',
-    28 => 'Livewire\\LivewireServiceProvider',
-    29 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
-    30 => 'Carbon\\Laravel\\ServiceProvider',
-    31 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    32 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    33 => 'Spatie\\Permission\\PermissionServiceProvider',
-    34 => 'TimWassenburg\\ServiceGenerator\\Http\\Providers\\CommandServiceProvider',
-    35 => 'TimWassenburg\\ServiceGenerator\\ServiceGeneratorServiceProvider',
-    36 => 'Yajra\\DataTables\\ButtonsServiceProvider',
-    37 => 'Yajra\\DataTables\\EditorServiceProvider',
-    38 => 'Yajra\\DataTables\\ExportServiceProvider',
-    39 => 'Yajra\\DataTables\\FractalServiceProvider',
-    40 => 'Yajra\\DataTables\\HtmlServiceProvider',
-    41 => 'Yajra\\DataTables\\DataTablesServiceProvider',
-    42 => 'App\\Providers\\AppServiceProvider',
+    27 => 'Laravel\\Socialite\\SocialiteServiceProvider',
+    28 => 'Laravel\\Tinker\\TinkerServiceProvider',
+    29 => 'Livewire\\LivewireServiceProvider',
+    30 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    31 => 'Carbon\\Laravel\\ServiceProvider',
+    32 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
+    33 => 'Termwind\\Laravel\\TermwindServiceProvider',
+    34 => 'Spatie\\Permission\\PermissionServiceProvider',
+    35 => 'TimWassenburg\\ServiceGenerator\\Http\\Providers\\CommandServiceProvider',
+    36 => 'TimWassenburg\\ServiceGenerator\\ServiceGeneratorServiceProvider',
+    37 => 'Yajra\\DataTables\\ButtonsServiceProvider',
+    38 => 'Yajra\\DataTables\\EditorServiceProvider',
+    39 => 'Yajra\\DataTables\\ExportServiceProvider',
+    40 => 'Yajra\\DataTables\\FractalServiceProvider',
+    41 => 'Yajra\\DataTables\\HtmlServiceProvider',
+    42 => 'Yajra\\DataTables\\DataTablesServiceProvider',
+    43 => 'App\\Providers\\AppServiceProvider',
   ),
   'eager' => 
   array (
@@ -232,6 +233,7 @@
     'Barryvdh\\LaravelIdeHelper\\Console\\EloquentCommand' => 'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
     'Laravel\\Sail\\Console\\InstallCommand' => 'Laravel\\Sail\\SailServiceProvider',
     'Laravel\\Sail\\Console\\PublishCommand' => 'Laravel\\Sail\\SailServiceProvider',
+    'Laravel\\Socialite\\Contracts\\Factory' => 'Laravel\\Socialite\\SocialiteServiceProvider',
     'command.tinker' => 'Laravel\\Tinker\\TinkerServiceProvider',
   ),
   'when' => 
@@ -279,6 +281,9 @@
     array (
     ),
     'Laravel\\Sail\\SailServiceProvider' => 
+    array (
+    ),
+    'Laravel\\Socialite\\SocialiteServiceProvider' => 
     array (
     ),
     'Laravel\\Tinker\\TinkerServiceProvider' => 

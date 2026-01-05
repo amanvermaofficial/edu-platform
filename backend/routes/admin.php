@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\QuizAttemptController;
 use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\QuizQuestionImportController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TradeController;
 use App\Http\Controllers\Admin\UserController;
 
@@ -46,6 +47,9 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::get('quiz-attempts', [QuizAttemptController::class, 'index'])
             ->name('quiz-attempts.index');
         Route::get('quiz-attempts/{attempt}', [QuizAttemptController::class, 'show'])
-        ->name('quiz-attempts.show');    
+            ->name('quiz-attempts.show');
+        //students
+        Route::resource('students', StudentController::class)
+            ->only(['index', 'show', 'destroy']);
     });
 });
