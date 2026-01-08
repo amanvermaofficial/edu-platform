@@ -4,6 +4,7 @@ import { Avatar, Button } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Edit } from "@mui/icons-material";
 import ProfileModal from "../components/Profile/ProfileModal";
+import { getProfile } from "../services/ProfileService";
 
 function Profile() {
   const { userData, status } = useSelector((state) => state.auth || {});
@@ -24,9 +25,20 @@ function Profile() {
       </div>
     );
 
-  const profilePic = userData.profile_picture
-    ? `${import.meta.env.VITE_API_URL}/storage/${userData.profile_picture}`
-    : "/default.jpg";
+  const getProfilePic = () => {
+    if (!userData.profile_picture) {
+      return "/default.jpg";
+    }
+
+    if (userData.profile_picture.startsWith('http://') ||
+      userData.profile_picture.startsWith('https://')) {
+      return userData.profile_picture;
+    }
+
+    return `${import.meta.env.VITE_API_URL}/storage/${userData.profile_picture}`;
+  }
+
+  const profilePic = getProfilePic();
 
   return (
     <div className="pt-20 px-6 md:px-20 min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-100">

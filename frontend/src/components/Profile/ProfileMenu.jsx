@@ -17,9 +17,20 @@ function ProfileMenu({ onLogout, onProfile }) {
   const open = Boolean(anchorEl);
   const userData = useSelector((state) => state.auth.userData);
 
-  const profilePic = userData?.profile_picture
-    ? `${import.meta.env.VITE_API_URL}/storage/${userData.profile_picture}`
-    : "/default.jpg";
+  const getProfilePic = () => {
+    if (!userData || !userData.profile_picture) {
+      return "/default.jpg";
+    }
+
+    if (userData.profile_picture.startsWith('http://') ||
+      userData.profile_picture.startsWith('https://')) {
+      return userData.profile_picture;
+    }
+
+    return `${import.meta.env.VITE_API_URL}/storage/${userData.profile_picture}`;
+  }
+
+  const profilePic = getProfilePic();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

@@ -10,6 +10,7 @@ class Student extends Authenticatable
 {
   use HasApiTokens;
   protected $fillable = [
+    'google_id',
     'name',
     'email',
     'phone',

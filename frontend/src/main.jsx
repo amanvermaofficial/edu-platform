@@ -17,6 +17,9 @@ import QuizResult from './components/Quiz/QuizResult.jsx'
 import Profile from './pages/Profile.jsx'
 // index.js or main.jsx
 import "nprogress/nprogress.css";
+import GoogleLogin from './components/GoogleLogin.jsx'
+import AuthCallback from './pages/AuthCallback.jsx'
+import AuthSuccess from './pages/AuthSuccess.jsx'
 
 
 const router = createBrowserRouter([
@@ -27,6 +30,30 @@ const router = createBrowserRouter([
       { path: '/', element: <Home /> },
       { path: "/about", element: (<About />) },
       { path: "/courses", element: (<Courses />) },
+      {
+        path: '/login',
+        element: (
+          <AuthLayout authentication={false}>
+            <GoogleLogin />
+          </AuthLayout>
+        )
+      },
+      {
+        path: '/auth/callback',
+        element: (
+          <AuthLayout authentication={false}>
+            <AuthCallback />
+          </AuthLayout>
+        )
+      },
+      {
+        path: 'auth/success',
+        element: (
+          <AuthLayout authentication={false}>
+            <AuthSuccess />
+          </AuthLayout>
+        )
+      },
       {
         path: '/dashboard',
         element: (

@@ -8,7 +8,9 @@ import {
     Select,
     MenuItem,
     Avatar,
-    IconButton
+    IconButton,
+    FormControl,
+    InputLabel
 } from "@mui/material";
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { useForm } from 'react-hook-form';
@@ -36,12 +38,14 @@ const MenuProps = {
 
 
 function ProfileModal({ open, onClose, defaultValues }) {
-    const { register, reset, handleSubmit, control, formState: { errors } } = useForm({ defaultValues });
+    const { register, reset, handleSubmit, control, watch, formState: { errors } } = useForm({ defaultValues });
     const [courses, setCourses] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState("");
     const [trades, setTrades] = useState([]);
     const [preview, setPreview] = useState(defaultValues?.profile_picture || null);
     const dispatch = useDispatch();
+
+    const watchedCourseId = watch('course_id');
 
     const onSubmit = async (data) => {
         try {
@@ -93,13 +97,13 @@ function ProfileModal({ open, onClose, defaultValues }) {
     }, [])
 
     useEffect(() => {
-        if (!selectedCourse) {
+        if (!watchedCourseId) {
             setTrades([]);
             return;
         }
         async function fetchTrades() {
             try {
-                const res = await getTradesByCourse(selectedCourse);
+                const res = await getTradesByCourse(watchedCourseId);
                 setTrades(res.data.data.trades);
             } catch (error) {
                 toast.error("Failed to load trades");
@@ -107,7 +111,7 @@ function ProfileModal({ open, onClose, defaultValues }) {
         }
 
         fetchTrades();
-    }, [selectedCourse]);
+    }, [watchedCourseId]);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -154,12 +158,14 @@ function ProfileModal({ open, onClose, defaultValues }) {
                     <Input label="Name" className="mb-4" placeholder="Enter your name" {...register("name", { required: "Name is required", pattern: { value: /^[A-Za-z\s]+$/, message: 'Invalid name' } })} />
                     {errors.name && (<p className="text-red-500">{errors.name.message}</p>)}
 
-                    <Input label="Email" className="mb-4" type="email" placeholder="Enter your email" {...register("email", {
-                        required: "Email is required", pattern: {
-                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: "Enter a valid email address",
-                        },
-                    })} />
+                    <Input label="Email" className="mb-4" type="email"
+                        readOnly
+                        placeholder="Enter your email" {...register("email", {
+                            required: "Email is required", pattern: {
+                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                message: "Enter a valid email address",
+                            },
+                        })} />
                     {errors.email && (<p className="text-red-500">{errors.email.message}</p>)}
 
                     <Input label="Phone Number" className="mb-4" placeholder="Enter your phone number" {...register("phone", {
@@ -178,74 +184,93 @@ function ProfileModal({ open, onClose, defaultValues }) {
                         },
                     })} />
                     {errors.phone && (<p className="text-red-500">{errors.phone.message}</p>)}
-
-                    <Controller
-                        name="course_id"
-                        control={control}
-                        rules={{ required: "Course is required" }}
-                        render={({ field }) => (
-                            <Select
-                                label="Course"
-                                className="mb-4"
-                                MenuProps={MenuProps}
-                                {...field}
-                                onChange={(e) => {
-                                    field.onChange(e);
-                                    setSelectedCourse(e.target.value);
-                                }}
-                            >
-                                <MenuItem value="">
-                                    <em>Select Course</em>
-                                </MenuItem>
-                                {courses.map(course => (
-                                    <MenuItem key={course.id} value={course.id}>
-                                        {course.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
+                    <div className="mb-4">
+                        <Controller
+                            name="course_id"
+                            control={control}
+                            rules={{ required: "Course is required" }}
+                            render={({ field }) => (
+                                <FormControl fullWidth className="mb-4">
+                                    <InputLabel>Course</InputLabel>
+                                    <Select
+                                        {...field}
+                                        label="Course"
+                                        MenuProps={MenuProps}
+                                    >
+                                        <MenuItem value="">
+                                            <em>Select Course</em>
+                                        </MenuItem>
+                                        {courses.map(course => (
+                                            <MenuItem key={course.id} value={course.id}>
+                                                {course.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        />
+                        {errors.course_id && (
+                            <p className="text-red-500 text-sm mb-2">{errors.course_id.message}</p>
                         )}
-                    />
-
-                    {errors.course_id && (
-                        <p className="text-red-500 text-sm">{errors.course_id.message}</p>
-                    )}
-
-
-                    <Controller
-                        name='trade_id'
-                        control={control}
-                        rules={{ required: 'Trade is required' }}
-                        render={({ field }) => (
-                            <Select label='Trade' className="mb-4" MenuProps={MenuProps} {...field}>
-                                <MenuItem value="">
-                                    <em>Select Trade</em>
-                                </MenuItem>
-                                {trades.map((trade) => (
-                                    <MenuItem key={trade.id} value={trade.id}>
-                                        {trade.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
+                    </div>
+                    <div className="mb-4">
+                        <Controller
+                            name='trade_id'
+                            control={control}
+                            rules={{ required: 'Trade is required' }}
+                            render={({ field }) => (
+                                <FormControl fullWidth className="mb-4">
+                                    <InputLabel>Trade</InputLabel>
+                                    <Select
+                                        {...field}
+                                        label='Trade'
+                                        MenuProps={MenuProps}
+                                        disabled={!watchedCourseId || trades.length === 0}
+                                    >
+                                        <MenuItem value="">
+                                            <em>Select Trade</em>
+                                        </MenuItem>
+                                        {trades.map((trade) => (
+                                            <MenuItem key={trade.id} value={trade.id}>
+                                                {trade.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        />
+                        {errors.trade_id && (
+                            <p className="text-red-500 text-sm mb-2">{errors.trade_id.message}</p>
                         )}
-                    />
 
-                    {errors.trade_id && (
-                        <p className="text-red-500 text-sm">{errors.trade_id.message}</p>
-                    )}
-                    <Select
-                        label="Gender"
-                        MenuProps={MenuProps}
-                        {...register("gender", { required: "Gender is required" })}
-                    >
-                        <MenuItem value="">Select Gender</MenuItem>
-                        <MenuItem value="male">Male</MenuItem>
-                        <MenuItem value="female">Female</MenuItem>
-                        <MenuItem value="other">Other</MenuItem>
-                    </Select>
-                    {errors.gender && (
-                        <p className="text-red-500 text-sm">{errors.gender.message}</p>
-                    )}
-
+                    </div>
+                    <div className="mb-4">
+                        <Controller
+                            name="gender"
+                            control={control}
+                            rules={{ required: "Gender is required" }}
+                            render={({ field }) => (
+                                <FormControl fullWidth className="mb-4">
+                                    <InputLabel>Gender</InputLabel>
+                                    <Select
+                                        {...field}
+                                        label="Gender"
+                                        MenuProps={MenuProps}
+                                    >
+                                        <MenuItem value="">
+                                            <em>Select Gender</em>
+                                        </MenuItem>
+                                        <MenuItem value="male">Male</MenuItem>
+                                        <MenuItem value="female">Female</MenuItem>
+                                        <MenuItem value="other">Other</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            )}
+                        />
+                        {errors.gender && (
+                            <p className="text-red-500 text-sm mb-2">{errors.gender.message}</p>
+                        )}
+                    </div>
 
                     <Input
                         label="State"
