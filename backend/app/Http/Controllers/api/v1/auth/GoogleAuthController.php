@@ -25,7 +25,6 @@ class GoogleAuthController extends Controller
                     'google_id' => $googleUser->id,
                     'name' => $googleUser->name,
                     'profile_picture' => $googleUser->avatar,
-                    'completed_profile' => false
                 ]
             );
 

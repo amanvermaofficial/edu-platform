@@ -40,7 +40,6 @@ const MenuProps = {
 function ProfileModal({ open, onClose, defaultValues }) {
     const { register, reset, handleSubmit, control, watch, formState: { errors } } = useForm({ defaultValues });
     const [courses, setCourses] = useState([]);
-    const [selectedCourse, setSelectedCourse] = useState("");
     const [trades, setTrades] = useState([]);
     const [preview, setPreview] = useState(defaultValues?.profile_picture || null);
     const dispatch = useDispatch();

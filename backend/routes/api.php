@@ -17,7 +17,6 @@ Route::get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     // Route::post('/send-otp',[OtpLogController::class,'sendOtp']);
     // Route::post('/verify-otp',[OtpLogController::class,'verifyOtp']); 
-    
 });
 
 Route::prefix('v1')->group(function () {

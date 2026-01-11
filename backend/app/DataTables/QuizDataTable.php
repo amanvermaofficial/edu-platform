@@ -21,7 +21,7 @@ class QuizDataTable extends DataTable
             })
 
             ->editColumn('duration', function ($row) {
-                return $row->duration ? $row->duration . ' min' : '-';
+                return $row->duration ? $row->duration . ' seconds' : '-';
             })
 
             ->editColumn('total_marks', function ($row) {

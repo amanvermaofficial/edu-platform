@@ -28,7 +28,7 @@ export const FadeUp = (delay) => ({
 function Home() {
   const [otpOpen, setOtpOpen] = React.useState(false);
   const navigate = useNavigate();
-  const authStatus = useSelector((state)=>state.auth.status)
+  const authStatus = useSelector((state) => state.auth.status)
 
   return (
     <section className="relative overflow-hidden bg-white">
@@ -72,20 +72,22 @@ function Home() {
               animate="animate"
               className="flex justify-center lg:justify-start"
             >
-              {!authStatus ? (<button
-                onClick={() => setOtpOpen(true)}
-                className="primary-btn"
-              >
-                Get Started
-                <IoIosArrowRoundForward className="text-2xl group-hover:translate-x-2 duration-300" />
-              </button>):(
+              {!authStatus ? (
                 <button
-                onClick={() => navigate('/courses')}
-                className="primary-btn"
-              >
-               Explore now
-                <IoIosArrowRoundForward className="text-2xl group-hover:translate-x-2 duration-300" />
-              </button>
+                  onClick={() => navigate('/login')}  
+                  className="primary-btn"
+                >
+                  Get Started
+                  <IoIosArrowRoundForward className="text-2xl group-hover:translate-x-2 duration-300" />
+                </button>
+              ) : (
+                <button
+                  onClick={() => navigate('/courses')}
+                  className="primary-btn"
+                >
+                  Explore now
+                  <IoIosArrowRoundForward className="text-2xl group-hover:translate-x-2 duration-300" />
+                </button>
               )}
             </motion.div>
           </div>

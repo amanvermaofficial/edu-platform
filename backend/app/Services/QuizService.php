@@ -81,10 +81,6 @@ class QuizService
                 ];
             }
 
-
-
-
-
             $attempt = $this->repo->createAttempt(
                 $student->id,
                 $quiz->id,

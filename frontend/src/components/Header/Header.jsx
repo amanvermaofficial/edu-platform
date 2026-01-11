@@ -4,14 +4,12 @@ import logo from '../../assets/logo.png'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import ProfileMenu from '../Profile/ProfileMenu'
-import { HiOutlineMenuAlt3, HiX } from 'react-icons/hi' // Hamburger + Close icon
-import OtpPage from '../../pages/OtpPage'
+import { HiOutlineMenuAlt3, HiX } from 'react-icons/hi' 
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status)
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [otpOpen, setOtpOpen] = useState(false);
 
   const NavbarMenu = [
     { name: "Home", slug: "/", active: !authStatus },
@@ -30,7 +28,7 @@ function Header() {
 
   const handleMenuClick = (slug) => {
     if (!authStatus && (slug === '/dashboard' || slug === '/courses')) {
-      setOtpOpen(true)
+      navigate('/login')
     } else {
       navigate(slug)
     }
@@ -45,7 +43,10 @@ function Header() {
         <div className="flex items-center gap-2">
           <img src={logo} className="w-14" alt="logo" />
           <div className="flex flex-col justify-start">
-            <span className="text-black font-bold text-start text-xl">ITI Papers</span>
+            <h1 className="text-xl font-bold ">
+              <span className="text-gray-800">ITI</span>
+              <span className="text-amber-600">Papers</span>
+            </h1>
             <p className="text-sm">Mindset of Growth</p>
           </div>
         </div>
@@ -69,7 +70,7 @@ function Header() {
             {authStatus ? (
               <ProfileMenu onProfile={handleProfile} onLogout={handleLogout} />
             ) : (
-              <button className="primary-btn ml-4" onClick={() => setOtpOpen(true)}>Get Start</button>
+              <button className="primary-btn ml-4" onClick={() => navigate('/login')}>Get Start</button>
             )}
           </ul>
         </div>
@@ -112,7 +113,7 @@ function Header() {
           </ul>
         </div>
       )}
-      <OtpPage open={otpOpen} onClose={() => setOtpOpen(false)} />
+      
     </nav>
   )
 }

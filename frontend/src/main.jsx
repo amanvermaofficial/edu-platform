@@ -18,7 +18,6 @@ import Profile from './pages/Profile.jsx'
 // index.js or main.jsx
 import "nprogress/nprogress.css";
 import GoogleLogin from './components/GoogleLogin.jsx'
-import AuthCallback from './pages/AuthCallback.jsx'
 import AuthSuccess from './pages/AuthSuccess.jsx'
 
 
@@ -35,14 +34,6 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout authentication={false}>
             <GoogleLogin />
-          </AuthLayout>
-        )
-      },
-      {
-        path: '/auth/callback',
-        element: (
-          <AuthLayout authentication={false}>
-            <AuthCallback />
           </AuthLayout>
         )
       },
