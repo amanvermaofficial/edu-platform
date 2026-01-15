@@ -6,6 +6,7 @@ use App\Http\Controllers\api\v1\CourseController;
 use App\Http\Controllers\api\v1\OtpLogController;
 use App\Http\Controllers\api\v1\QuizController;
 use App\Http\Controllers\api\v1\StudentController;
+use App\Http\Controllers\api\v1\StudentPerformanceController;
 use App\Http\Controllers\api\v1\TradeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,8 +16,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('v1')->group(function () {
-    // Route::post('/send-otp',[OtpLogController::class,'sendOtp']);
-    // Route::post('/verify-otp',[OtpLogController::class,'verifyOtp']); 
+    Route::post('/send-otp',[OtpLogController::class,'sendOtp']);
+    Route::post('/verify-otp',[OtpLogController::class,'verifyOtp']); 
 });
 
 Route::prefix('v1')->group(function () {
@@ -34,5 +35,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/quizzes/{quiz}/submit', [QuizController::class, 'submitQuiz']);
         Route::post('/quizzes/{quiz}/start', [QuizController::class, 'startQuiz']);
         Route::get('/quizzes/{quiz}/result', [QuizController::class, 'quizResult']);
+        Route::get('/student/performance', [StudentPerformanceController::class, 'index']);
     });
 });

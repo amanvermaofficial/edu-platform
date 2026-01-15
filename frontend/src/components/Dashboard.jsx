@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProfile } from "../services/ProfileService";
 import ProfileModal from "./Profile/ProfileModal";
 import { setUserData } from "../store/authSlice";
+import PerformanceCard from "./PerformanceCard";
 
 function Dashboard() {
   const [open, setOpen] = useState(false);
@@ -17,8 +18,7 @@ function Dashboard() {
       const response = await getProfile();
       const user = response.data.data;
       dispatch(setUserData(user));
-      console.log(user);
-      
+
 
       // Profile check
       if (!user.completed_profile) setOpen(true);
@@ -76,25 +76,9 @@ function Dashboard() {
         </div>
       )}
 
-      {/* Recommended Courses (Static for now) */}
+      {/* Performance Section */}
       <div className="mt-12">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-          Recommended for You
-        </h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recommended.map((item) => (
-            <div
-              key={item.id}
-              className="border p-5 rounded-xl shadow-sm hover:shadow-md transition bg-white"
-            >
-              <h3 className="font-semibold text-lg mb-1">{item.title}</h3>
-              <p className="text-gray-500 text-sm mb-3">{item.category}</p>
-              <button className="w-full bg-amber-500 text-white py-2 rounded-lg hover:bg-amber-600 transition">
-                View
-              </button>
-            </div>
-          ))}
-        </div>
+        <PerformanceCard />
       </div>
 
       {/* Profile Modal */}
