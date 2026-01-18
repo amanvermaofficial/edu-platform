@@ -87,4 +87,21 @@ class QuizController extends Controller
         $this->service->delete($quiz);
         return back()->with('success', 'Quiz deleted successfully');
     }
+
+    public function toggleStatus(Quiz $quiz)
+    {
+        // Prevent deactivation if quiz is active and has questions
+        if (!$quiz->is_active && $quiz->questions()->count() === 0) {
+            return back()->with('error', 'Cannot activate quiz without questions.');
+        }
+
+        // Toggle the status
+        $newStatus = !$quiz->is_active;
+        $quiz->update(['is_active' => $newStatus]);
+        
+        $message = $newStatus ? 'Quiz activated successfully' : 'Quiz deactivated successfully';
+        return back()->with('success', $message);
+    }
+
 }
+

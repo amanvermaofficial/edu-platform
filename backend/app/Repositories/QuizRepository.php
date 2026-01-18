@@ -20,10 +20,14 @@ class QuizRepository
 
     public function getQuizzesByCourseTrade($courseTradeId)
     {
-        return Quiz::whereHas('courseTrades', function ($q) use ($courseTradeId) {
-            $q->where('course_trade_id', $courseTradeId);
-        })->withCount('questions')->get();
+        return Quiz::where('is_active', true)
+            ->whereHas('courseTrades', function ($q) use ($courseTradeId) {
+                $q->where('course_trade_id', $courseTradeId);
+            })
+            ->withCount('questions')
+            ->get();
     }
+
 
     public function getQuizWithQuestions($quizId)
     {
@@ -64,8 +68,8 @@ class QuizRepository
         return QuizAttemptAnswer::create([
             'quiz_attempt_id' => $attemptId,
             'question_id' => $question->id,
-            'selected_option' => $selectedOption ? $selectedOption->option_text : null,
-            'correct_option' => $correctOption ? $correctOption->option_text : null,
+            'selected_option_id' => $selectedOption?->id,
+            'correct_option_id' => $correctOption?->id,
             'is_correct' => $isCorrect,
         ]);
     }
@@ -111,8 +115,8 @@ class QuizRepository
         return QuizAttemptAnswer::where('quiz_attempt_id', $attemptId)
             ->get([
                 'question_id',
-                'selected_option',
-                'correct_option',
+                'selected_option_id',
+                'correct_option_id',
                 'is_correct'
             ]);
     }

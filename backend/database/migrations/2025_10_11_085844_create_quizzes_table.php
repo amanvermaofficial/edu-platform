@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('duration')->nullable();
             $table->integer('total_marks')->nullable();
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

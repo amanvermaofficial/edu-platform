@@ -23,7 +23,7 @@ class QuizQuestionImportController extends Controller
         return view('admin.quiz_questions.import', compact('quizzes'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Quiz $quiz)
     {
         $request->validate([
             'quiz_id' => 'required|exists:quizzes,id',

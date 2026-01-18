@@ -48,6 +48,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
             ->name('quiz-attempts.index');
         Route::get('quiz-attempts/{attempt}', [QuizAttemptController::class, 'show'])
             ->name('quiz-attempts.show');
+        Route::post('quizzes/{quiz}/toggle-status', [QuizController::class, 'toggleStatus'])->name('quizzes.toggle-status');    
         //students
         Route::resource('students', StudentController::class)
             ->only(['index', 'show', 'destroy']);

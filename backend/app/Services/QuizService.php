@@ -7,7 +7,7 @@ use App\Repositories\QuizRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class QuizService.
@@ -186,97 +186,97 @@ class QuizService
     // }
 
     public function submitQuiz($request, $quiz)
-{
-    try {
-        $student = Auth::guard('sanctum')->user();
-        $answers = collect($request->input('answers'));
+    {
+        try {
+            $student = Auth::guard('sanctum')->user();
+            $answers = collect($request->input('answers'));
 
-        $attempt = $this->repo->findActiveAttempt($student->id, $quiz->id);
+            $attempt = $this->repo->findActiveAttempt($student->id, $quiz->id);
 
-        if (!$attempt) {
-            throw new Exception('No active quiz attempt found.');
-        }
+            if (!$attempt) {
+                throw new Exception('No active quiz attempt found.');
+            }
 
-        $expired = now()->greaterThan($attempt->end_time);
+            $expired = now()->greaterThan($attempt->end_time);
 
-        // Load questions with correct options (NO N+1)
-        $questions = $quiz->questions()->with('options')->get();
-        $totalQuestions = $questions->count();
+            // Load questions with correct options (NO N+1)
+            $questions = $quiz->questions()->with('options')->get();
+            $totalQuestions = $questions->count();
 
-        $score = $correct = $wrong = $skipped = 0;
+            $score = $correct = $wrong = $skipped = 0;
 
-        // Index answers by question_id
-        $answersByQuestion = $answers->keyBy('question_id');
+            // Index answers by question_id
+            $answersByQuestion = $answers->keyBy('question_id');
 
-        // Remove old answers if resubmitting
-        $attempt->answers()->delete();
+            // Remove old answers if resubmitting
+            $attempt->answers()->delete();
 
-        foreach ($questions as $question) {
+            foreach ($questions as $question) {
 
-            $correctOption = $question->options->firstWhere('is_correct', true);
-            $answer = $answersByQuestion->get($question->id);
+                $correctOption = $question->options->firstWhere('is_correct', true);
+                $answer = $answersByQuestion->get($question->id);
 
-            if (!$answer) {
-                $skipped++;
+                if (!$answer || empty($answer['selected_option_id'])) {
+                    $skipped++;
+                    $this->repo->saveAttemptAnswer(
+                        $attempt->id,
+                        $question,
+                        null,
+                        $correctOption,
+                        false
+                    );
+                    continue;
+                }
+
+                $selectedOption = $question->options
+                    ->firstWhere('id', $answer['selected_option_id']);
+
+                $isCorrect = $selectedOption &&
+                    $correctOption &&
+                    $selectedOption->id === $correctOption->id;
+
+                match ($isCorrect) {
+                    true => [$score++, $correct++],
+                    false => $wrong++
+                };
+
                 $this->repo->saveAttemptAnswer(
                     $attempt->id,
                     $question,
-                    null,
+                    $selectedOption,
                     $correctOption,
-                    false
+                    $isCorrect
                 );
-                continue;
             }
 
-            $selectedOption = $question->options
-                ->firstWhere('id', $answer['selected_option_id']);
-
-            $isCorrect = $selectedOption &&
-                $correctOption &&
-                $selectedOption->id === $correctOption->id;
-
-            match ($isCorrect) {
-                true => [$score++, $correct++],
-                false => $wrong++
-            };
-
-            $this->repo->saveAttemptAnswer(
-                $attempt->id,
-                $question,
-                $selectedOption,
-                $correctOption,
-                $isCorrect
+            $this->repo->updateAttemptResult(
+                $attempt,
+                $score,
+                $correct,
+                $wrong,
+                $skipped
             );
+
+            return [
+                'success' => true,
+                'message' => $expired
+                    ? 'Time limit exceeded, quiz auto-submitted.'
+                    : 'Quiz submitted successfully',
+                'data' => [
+                    'score' => $score,
+                    'correct_answers' => $correct,
+                    'wrong_answers' => $wrong,
+                    'skipped_questions' => $skipped,
+                    'total_questions' => $totalQuestions
+                ]
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
         }
-
-        $this->repo->updateAttemptResult(
-            $attempt,
-            $score,
-            $correct,
-            $wrong,
-            $skipped
-        );
-
-        return [
-            'success' => true,
-            'message' => $expired
-                ? 'Time limit exceeded, quiz auto-submitted.'
-                : 'Quiz submitted successfully',
-            'data' => [
-                'score' => $score,
-                'correct_answers' => $correct,
-                'wrong_answers' => $wrong,
-                'skipped_questions' => $skipped,
-                'total_questions' => $totalQuestions
-            ]
-        ];
-    } catch (Exception $e) {
-        return [
-            'success' => false,
-            'message' => $e->getMessage()
-        ];
     }
-}
 
 
     public function getQuizResult(Quiz $quiz)

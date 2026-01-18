@@ -34,6 +34,33 @@ class QuizDataTable extends DataTable
                     : '-';
             })
 
+            ->addColumn('status', function ($row) {
+                return $row->is_active
+                    ? '<span class="badge badge-success">Active</span>'
+                    : '<span class="badge badge-secondary">Inactive</span>';
+            })
+
+            ->addColumn('toggle', function ($row) {
+
+                if (!auth()->user()->can('quizzes.update')) {
+                    return '-';
+                }
+
+                $toggleUrl = route('admin.quizzes.toggle-status', $row->id);
+
+                return '
+        <form action="' . $toggleUrl . '" method="POST" style="display:inline">
+            ' . csrf_field() . '
+            <button type="submit"
+                class="btn btn-sm ' . ($row->is_active ? 'btn-warning' : 'btn-success') . '"
+                onclick="return confirm(\'Are you sure?\')">
+                ' . ($row->is_active ? 'Deactivate' : 'Activate') . '
+            </button>
+        </form>
+    ';
+            })
+
+
             ->addColumn('actions', function ($row) {
                 $editUrl   = route('admin.quizzes.edit', $row->id);
                 $deleteUrl = route('admin.quizzes.destroy', $row->id);
@@ -59,7 +86,8 @@ class QuizDataTable extends DataTable
                 return $buttons;
             })
 
-            ->rawColumns(['actions'])
+            ->rawColumns(['actions', 'status', 'toggle'])
+
             ->setRowId('id');
     }
 
@@ -125,6 +153,20 @@ class QuizDataTable extends DataTable
                 'data'  => 'created_at',
                 'name'  => 'created_at',
                 'title' => 'Created At',
+                'className' => 'text-center',
+            ],
+            [
+                'data' => 'status',
+                'title' => 'Status',
+                'orderable' => false,
+                'searchable' => false,
+                'className' => 'text-center',
+            ],
+            [
+                'data' => 'toggle',
+                'title' => 'Toggle',
+                'orderable' => false,
+                'searchable' => false,
                 'className' => 'text-center',
             ],
             [

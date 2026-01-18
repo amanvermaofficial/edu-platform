@@ -9,8 +9,8 @@ class QuizAttemptAnswer extends Model
     protected $fillable = [
         'quiz_attempt_id',
         'question_id',
-        'selected_option',
-        'correct_option',
+        'selected_option_id',
+        'correct_option_id',
         'is_correct'
     ];
 

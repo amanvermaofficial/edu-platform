@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('quiz_id');
             $table->string('question_text')->required();
+             $table->text('solution')->nullable();
             $table->timestamps();
         });
     }

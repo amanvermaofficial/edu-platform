@@ -28,6 +28,9 @@ class QuizQuestionImport implements ToCollection, WithHeadingRow
     {
         DB::beginTransaction();
         try {
+            if (Question::where('quiz_id', $this->quizId)->exists()) {
+                throw new Exception('Quiz already contains questions');
+            }
             foreach ($rows as $index => $row) {
                 if (empty($row['question'])) {
                     continue;
@@ -70,7 +73,7 @@ class QuizQuestionImport implements ToCollection, WithHeadingRow
                         'is_correct' => ($row['correct_option'] === $text),
                     ]);
                 }
-                 $this->inserted++;
+                $this->inserted++;
             }
             DB::commit();
         } catch (Exception $e) {
