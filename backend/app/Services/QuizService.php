@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Quiz;
+use App\Models\QuizAttemptAnswer;
 use App\Repositories\QuizRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -303,6 +304,53 @@ class QuizService
                     'skipped_questions' => $attempt->skipped_questions,
                     'attempted_at' => $attempt->created_at,
                     'answers' => $answers
+                ]
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    public function getResultReview(Quiz $quiz){
+        try {
+            $student = Auth::guard('sanctum')->user();
+            $attempt = $this->repo->findCompletedAttempt($student->id, $quiz->id);
+
+            if (!$attempt) {
+                throw new Exception('No completed attempt found for this quiz.');
+            }
+
+            $quiz = $this->repo->getQuizWithQuestions($quiz->id);
+
+            $quizAttemptAnswer = QuizAttemptAnswer::where('quiz_attempt_id', $attempt->id)->get()->keyBy('question_id');
+
+            $resultQuestions = $quiz->questions->map(function ($question) use ($quizAttemptAnswer) {
+                $answer = $quizAttemptAnswer[$question->id]??null;
+
+                return [
+                    'question_id' => $question->id,
+                    'question_text' => $question->question_text,
+                    'options' => $question->options->map(function ($option) use ($answer) {
+                        return [
+                            'id' => $option->id,
+                            'option_text' => $option->option_text,
+                            'is_correct' => (bool)$option->is_correct,
+                            'is_selected' => $answer?$answer->selected_option_id==$option->id:false,
+                        ];
+                    }),
+                ];
+            });
+
+            return [
+                'success' => true,
+                'message' => 'Quiz result analytics fetched successfully',
+                'data' => [
+                    'quiz_id' => $quiz->id,
+                    'quiz_title' => $quiz->title,
+                    'data' => $resultQuestions
                 ]
             ];
         } catch (Exception $e) {

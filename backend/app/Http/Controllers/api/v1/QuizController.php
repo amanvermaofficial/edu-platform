@@ -91,4 +91,18 @@ class QuizController extends Controller
 
         return $this->systemErrorResponse('Unable to fetch quiz result. Please try again later.');
     }
+
+    public function resultReview(Quiz $quiz)
+    {
+        $result = $this->service->getResultReview($quiz);
+
+        if ($result['success']) {
+            return $this->successResponse(
+                $result['message'],
+                $result['data']
+            );
+        }
+
+        return $this->systemErrorResponse('Unable to fetch result review. Please try again later.');
+    }
 }
