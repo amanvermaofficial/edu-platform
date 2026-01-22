@@ -333,6 +333,7 @@ class QuizService
                 return [
                     'question_id' => $question->id,
                     'question_text' => $question->question_text,
+                    'solution' => $question->solution,
                     'options' => $question->options->map(function ($option) use ($answer) {
                         return [
                             'id' => $option->id,

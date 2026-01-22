@@ -19,3 +19,7 @@ export const startQuizAttempt = async (quizId) => {
 export const getQuizResult = (quizId) => {
     return api.get(`/quizzes/${quizId}/result`);
 };
+
+export const getResultReview = (quizId)=>{
+    return api.get(`/quizzes/${quizId}/result-review`);
+}

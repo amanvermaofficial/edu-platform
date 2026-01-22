@@ -19,6 +19,7 @@ import Profile from './pages/Profile.jsx'
 import "nprogress/nprogress.css";
 import GoogleLogin from './components/GoogleLogin.jsx'
 import AuthSuccess from './pages/AuthSuccess.jsx'
+import QuizResultReview from './components/Quiz/QuizResultReview.jsx'
 
 
 const router = createBrowserRouter([
@@ -90,6 +91,14 @@ const router = createBrowserRouter([
         element:(
           <AuthLayout authentication={true}>
             <QuizResult />
+          </AuthLayout>
+        )
+      },
+      {
+        path:'/quiz-result/:quizId/result-review',
+        element:(
+          <AuthLayout authentication={true}>
+            <QuizResultReview />
           </AuthLayout>
         )
       },

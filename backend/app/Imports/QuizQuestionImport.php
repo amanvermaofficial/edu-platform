@@ -64,6 +64,7 @@ class QuizQuestionImport implements ToCollection, WithHeadingRow
                 $question = Question::create([
                     'quiz_id' => $this->quizId,
                     'question_text' => $row['question'],
+                    'solution' => $row['solution']
                 ]);
 
                 foreach ($options as $key => $text) {

@@ -35,7 +35,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/quizzes/{quiz}/submit', [QuizController::class, 'submitQuiz']);
         Route::post('/quizzes/{quiz}/start', [QuizController::class, 'startQuiz']);
         Route::get('/quizzes/{quiz}/result', [QuizController::class, 'quizResult']);
-        Route::get('/quizzes/{quiz}/review', [QuizController::class, 'resultReview']);
+        Route::get('/quizzes/{quiz}/result-review', [QuizController::class, 'resultReview']);
         Route::get('/student/performance', [StudentPerformanceController::class, 'index']);
     });
 });

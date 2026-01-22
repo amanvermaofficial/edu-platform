@@ -13,6 +13,7 @@ class Question extends Model
         'trade_id',
         'quiz_id',
         'question_text',
+        'solution',
     ];
 
     public function options(){
