@@ -19,6 +19,7 @@ Route::get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     Route::post('/send-otp', [OtpLogController::class, 'sendOtp']);
     Route::post('/verify-otp', [OtpLogController::class, 'verifyOtp']);
+    Route::get('/testimonials',[ReviewController::class,'index']);
 });
 
 Route::prefix('v1')->group(function () {
@@ -39,7 +40,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/quizzes/{quiz}/result', [QuizController::class, 'quizResult']);
         Route::get('/quizzes/{quiz}/result-review', [QuizController::class, 'resultReview']);
         //reviews-testimonials
-        Route::get('/testimonials',[ReviewController::class,'index']);
+        
         Route::post('/reviews', [ReviewController::class, 'store']);
     });
 });

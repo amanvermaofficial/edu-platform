@@ -56,7 +56,7 @@ function QuizAttempt() {
   }, [quizId]);
 
   useEffect(() => {
-    if (timeLeft === 0) handleSubmit();
+    if (timeLeft === 0) handleSubmit(true);
   }, [timeLeft])
 
 
@@ -86,12 +86,16 @@ function QuizAttempt() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (isAuto = false) => {
     Swal.fire({
       title: "Submit Quiz?",
-      text: "Are you sure you want to submit your answers?",
+      text: isAuto
+        ? "Time is up! Your quiz will be submitted automatically."
+        : "Are you sure you want to submit your answers?",
+      showCancelButton: !isAuto,  
       icon: "warning",
       confirmButtonText: "OK",
+      cancelButtonText: "Cancel",
       allowOutsideClick: false,
       allowEscapeKey: false,
     }).then(async (result) => {
@@ -123,7 +127,7 @@ function QuizAttempt() {
     );
   }
 
-   if (!quiz)
+  if (!quiz)
     return (
       <div className="flex flex-col justify-center items-center h-[80vh] space-y-4 bg-amber-50">
         <div className="h-12 w-12 rounded-full bg-amber-500 animate-pulse"></div>
@@ -238,7 +242,7 @@ function QuizAttempt() {
             </button>
           ) : (
             <button
-              onClick={handleSubmit}
+              onClick={() => handleSubmit(false)}
               className="px-5 sm:px-7 py-2 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-all text-sm sm:text-base"
             >
               Submit

@@ -6,10 +6,11 @@ import { getProfile } from "../services/ProfileService";
 import ProfileModal from "./Profile/ProfileModal";
 import { setUserData } from "../store/authSlice";
 import PerformanceCard from "./PerformanceCard";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const [open, setOpen] = useState(false);
-  const [recommended, setRecommended] = useState([]);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.userData);
 
@@ -54,7 +55,7 @@ function Dashboard() {
           </p>
         </div>
         <div className="flex items-center justify-center">
-          <button className="bg-amber-500 hover:bg-amber-600 text-white font-medium px-5 py-2.5 rounded-lg flex items-center gap-2 transition">
+          <button onClick={()=>userData.completed_profile ? navigate(`/courses/${userData.course_id}/trades/${userData.trade_id}/quizzes`) : setOpen(true)} className="bg-amber-500 hover:bg-amber-600 text-white font-medium px-5 py-2.5 rounded-lg flex items-center gap-2 transition">
             Continue Quiz
             <IoIosArrowRoundForward className="text-2xl" />
           </button>

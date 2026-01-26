@@ -90,7 +90,7 @@ class QuizRepository
     {
         return QuizAttempt::where('student_id', $studentId)
             ->where('quiz_id', $quizId)
-            ->where('end_time', '>', now())
+            ->latest()
             ->first();
     }
 

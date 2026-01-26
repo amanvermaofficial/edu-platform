@@ -9,6 +9,7 @@ import Testimonials from "../Testimonials";
 import OtpPage from "../../pages/OtpPage";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import TestimonialForm from "../TestimonialForm";
 
 export const FadeUp = (delay) => ({
   initial: { opacity: 0, y: 50 },
@@ -114,6 +115,7 @@ function Home() {
         <FeaturesSection />
         <ExploreYoutube />
         <Testimonials />
+        <TestimonialForm />
       </div>
     </section>
   );

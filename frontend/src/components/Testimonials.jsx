@@ -1,82 +1,119 @@
+import React, { useEffect, useState } from "react";
+import { getTestimonials } from "../services/review";
 import { motion } from "framer-motion";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
 
-const testimonials = [
-  {
-    name: "Rohit Kumar",
-    role: "Student",
-    feedback:
-      "This platform made learning so easy and fun. The mock tests helped me build real confidence!",
-    image:
-      "https://st.depositphotos.com/1011643/2013/i/450/depositphotos_20131045-happy-male-african-university-student-outdoors.jpg",
-  },
-  {
-    name: "Priya Sharma",
-    role: "Learner",
-    feedback:
-      "Simple explanations, smooth design, and great practice questions. Loved the experience!",
-    image:
-      "https://media.istockphoto.com/id/1365601848/photo/portrait-of-a-young-woman-carrying-her-schoolbooks-outside-at-college.jpg?s=612x612&w=0&k=20&c=EVxLUZsL0ueYFF1Nixit6hg-DkiV52ddGw_orw9BSJA=",
-  },
-  {
-    name: "Ankit Verma",
-    role: "Aspirant",
-    feedback:
-      "I used to get confused with topics, but the video lessons and progress tracker really helped.",
-    image:
-      "https://us.images.westend61.de/0001411501pw/portrait-of-confident-young-male-student-in-corridor-of-university-MASF19101.jpg",
-  },
-  // Add more testimonials here easily
-];
+function Testimonials() {
+  const [testimonials, setTestimonials] = useState([]);
+  const [activeTestimonial, setActiveTestimonial] = useState(null);
+  const [pause, setPause] = useState(false);
 
-const Testimonials = () => {
-  return (
-    <section className="bg-gradient-to-br from-amber-50 via-white to-amber-100 py-20 px-6">
-      <div className="max-w-6xl mx-auto text-center">
-        {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl md:text-5xl font-bold mb-4 text-gray-800"
-        >
-          What Students Say
-        </motion.h2>
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      const res = await getTestimonials();
+      setTestimonials(res.data.data);
+      console.log(res.data.data);
+      
+    };
+    fetchTestimonials();
+  }, []);
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-gray-600 text-md md:text-lg mb-12 max-w-2xl mx-auto"
-        >
-          Real feedback from learners who experienced the change in their preparation journey.
-        </motion.p>
-
-        {/* ✅ Scrollable Testimonials */}
-        <div className="flex overflow-x-auto gap-6 pb-6 scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-transparent snap-x snap-mandatory">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              viewport={{ once: true }}
-              className="flex-shrink-0 w-80 bg-white p-8 rounded-2xl border border-amber-200 hover:border-amber-400 transition-all shadow-sm hover:shadow-md text-center snap-center"
-            >
-              <img
-                src={t.image}
-                alt={t.name}
-                className="w-20 h-20 rounded-full mb-5 object-cover mx-auto border border-amber-300"
-              />
-              <p className="text-gray-700 italic mb-4 leading-relaxed">“{t.feedback}”</p>
-              <h4 className="text-lg font-semibold text-gray-900">{t.name}</h4>
-              <span className="text-sm text-amber-600">{t.role}</span>
-            </motion.div>
-          ))}
-        </div>
+  if (!testimonials.length) {
+    return (
+      <div className="flex justify-center mt-20">
+        <p className="text-gray-500">Loading...</p>
       </div>
-    </section>
+    );
+  }
+
+  return (
+    <>
+      {/* SECTION */}
+      <section className="mt-24 bg-[#fdf6ea] py-16">
+        {/* CENTERED CONTAINER */}
+        <div className="max-w-6xl mx-auto px-4 overflow-hidden">
+          <h1 className="text-3xl font-bold mb-10 text-center">
+            Student Testimonials 💬
+          </h1>
+
+          {/* SINGLE ROW SLIDER */}
+          <motion.div
+            className="flex gap-6 cursor-grab"
+            drag="x"
+            dragConstraints={{ left: -1200, right: 0 }}
+            animate={!pause ? { x: ["0%", "-50%"] } : {}}
+            transition={{
+              repeat: Infinity,
+              duration: 28,
+              ease: "linear",
+            }}
+            onMouseEnter={() => setPause(true)}
+            onMouseLeave={() => setPause(false)}
+          >
+            {[...testimonials, ...testimonials].map((testimonial, index) => (
+              <div
+                key={index}
+                onClick={() => setActiveTestimonial(testimonial)}
+                className="min-w-[300px] bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition cursor-pointer"
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <img
+                    src={testimonial.student.profile_picture}
+                     referrerPolicy="no-referrer"
+                    alt={testimonial.student.name}
+                    className="w-12 h-12 rounded-full object-cover border"
+                  />
+                  <h2 className="font-semibold text-gray-800">
+                    {testimonial.student.name}
+                  </h2>
+                </div>
+
+                <p className="text-gray-600 italic line-clamp-3">
+                  “{testimonial.description}”
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* MODAL */}
+      <Modal
+        open={!!activeTestimonial}
+        onClose={() => setActiveTestimonial(null)}
+        slotProps={{
+          backdrop: {
+            sx: { backgroundColor: "rgba(0,0,0,0.6)" },
+          },
+        }}
+      >
+        <Box className="bg-white max-w-xl w-full mx-auto mt-32 p-6 rounded-2xl outline-none relative">
+          <button
+            onClick={() => setActiveTestimonial(null)}
+            className="absolute top-4 right-4 text-xl text-gray-500 hover:text-black"
+          >
+            ✕
+          </button>
+
+          <div className="flex items-center gap-4 mb-6">
+            <img
+              src={activeTestimonial?.student.profile_picture}
+              alt=""
+              className="w-16 h-16 rounded-full object-cover border"
+            />
+            <h2 className="text-xl font-bold text-gray-800">
+              {activeTestimonial?.student.name}
+            </h2>
+          </div>
+
+          <p className="text-gray-700 text-lg leading-relaxed italic">
+            “{activeTestimonial?.description}”
+          </p>
+        </Box>
+      </Modal>
+    </>
   );
-};
+}
 
 export default Testimonials;
