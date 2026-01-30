@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\QuizAttemptController;
 use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\QuizQuestionImportController;
+use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TradeController;
@@ -48,9 +49,12 @@ Route::prefix('admin')->as('admin.')->group(function () {
             ->name('quiz-attempts.index');
         Route::get('quiz-attempts/{attempt}', [QuizAttemptController::class, 'show'])
             ->name('quiz-attempts.show');
-        Route::post('quizzes/{quiz}/toggle-status', [QuizController::class, 'toggleStatus'])->name('quizzes.toggle-status');    
+        Route::post('quizzes/{quiz}/toggle-status', [QuizController::class, 'toggleStatus'])->name('quizzes.toggle-status');
         //students
         Route::resource('students', StudentController::class)
             ->only(['index', 'show', 'destroy']);
+        Route::resource('reviews', ReviewController::class)->only(['index', 'show', 'destroy']);
+        Route::post('reviews/{review}/toggle-status', [ReviewController::class, 'toggleStatus'])
+            ->name('reviews.toggle-status');
     });
 });
