@@ -1,18 +1,19 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
-        <img src={{ asset('admin/dist/img/AdminLTELogo.png') }} alt="AdminLTE Logo"
-            class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Admin</span>
+    <a href="{{ route('admin.dashboard') }}" class="brand-link">
+        <i class="fas fa-graduation-cap brand-image elevation-3"
+            style="font-size: 22px; margin-right: 8px; margin-top: 4px"></i>
+
+        <span class="brand-text font-weight-light">ITI Papers</span>
     </a>
+
 
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src={{ asset('admin/dist/img/user2-160x160.jpg') }} class="img-circle elevation-2"
-                    alt="User Image">
+                <img src={{ asset('admin/dist/img/admin.png') }} class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="#" class="d-block">{{ auth()->user()->name }}</a>
@@ -111,11 +112,13 @@
                     <li
                         class="nav-item {{ request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-user-shield"></i>
                             <p>
                                 Roles & Permissions
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
+
 
                         <ul class="nav nav-treeview">
                             @can('roles.view')
@@ -143,11 +146,13 @@
                     <li
                         class="nav-item {{ request()->routeIs('admin.courses.*') || request()->routeIs('admin.trades.*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-book"></i>
                             <p>
                                 Courses & Trades
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
+
 
                         <ul class="nav nav-treeview">
                             @can('courses.view')
