@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
 class Student extends Authenticatable
 {
-  use HasApiTokens;
+  use HasApiTokens,HasFactory;
   protected $fillable = [
     'google_id',
     'name',
@@ -18,8 +19,6 @@ class Student extends Authenticatable
     'trade_id',
     'gender',
     'state',
-    'district',
-    'dob',
     'profile_picture',
     'mobile_verified_at',
     'completed_profile',
