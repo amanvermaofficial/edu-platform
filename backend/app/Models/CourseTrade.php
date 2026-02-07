@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CourseTrade extends Model
 {
+    use HasFactory;
     protected $table = 'course_trade';
     protected $fillable = ['course_id','trade_id'];
 
