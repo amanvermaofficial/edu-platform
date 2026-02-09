@@ -27,7 +27,7 @@ class updateProfileRequest extends FormRequest
             'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'phone' => 'nullable|string|regex:/^[6-9]\d{9}$/',
             'course_id' => 'required|exists:courses,id',
-            'trade_id' => 'required|string|exists:trades,id',
+            'trade_id' => 'required|integer|exists:trades,id',
             'gender' => 'required|in:male,female,other',
             'state' => "required|string|max:255",
         ];
