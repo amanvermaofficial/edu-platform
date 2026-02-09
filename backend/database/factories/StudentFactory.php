@@ -24,4 +24,12 @@ class StudentFactory extends Factory
             'completed_profile' => true,
         ];
     }
+
+    public function withoutRelations()
+    {
+        return $this->state(fn() => [
+            'course_id' => null,
+            'trade_id' => null,
+        ]);
+    }
 }
