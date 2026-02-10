@@ -25,7 +25,7 @@ class StudentPerformanceController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'performance' => $performance['data'],
+                'performance' => $performance['data']['performance'],
                 'quiz_history' => $history['data']['history']
             ]
         ]);
