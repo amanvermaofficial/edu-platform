@@ -46,31 +46,31 @@ function PerformanceCard() {
         <div className="bg-amber-50 rounded-lg p-4 text-center">
           <p className="text-sm text-gray-500">Quizzes Attempted</p>
           <p className="text-2xl font-bold text-amber-600">
-            {performance.performance.performance.total_quizzes}
+            {performance.performance.total_quizzes}
           </p>
         </div>
 
         <div className="bg-green-50 rounded-lg p-4 text-center">
           <p className="text-sm text-gray-500">Average Score</p>
           <p className="text-2xl font-bold text-green-600">
-            {performance.performance.performance.average_score}%
+            {performance.performance.average_score}%
           </p>
         </div>
 
         <div className="bg-blue-50 rounded-lg p-4 text-center">
           <p className="text-sm text-gray-500">Best Score</p>
           <p className="text-2xl font-bold text-blue-600">
-            {performance.performance.performance.best_score}%
+            {performance.performance.best_score}%
           </p>
         </div>
 <div className="bg-purple-50 rounded-lg p-4 text-center">
     <p className="text-sm text-gray-500">Last Quiz</p>
 
-    {performance.performance.performance.last_attempt ? (
+    {performance.performance.last_attempt ? (
       <p className="text-2xl font-bold text-purple-600">
         {Math.round(
-          (performance.performance.performance.last_attempt.score /
-            performance.performance.performance.last_attempt.total_questions) *
+          (performance.performance.last_attempt.score /
+            performance.performance.last_attempt.total_questions) *
             100
         )}%
       </p>
