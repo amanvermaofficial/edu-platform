@@ -18,11 +18,19 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('profile_picture')->nullable();
-            $table->unsignedBigInteger('course_id')->nullable();
-            $table->unsignedBigInteger('trade_id')->nullable();
+            $table->foreignId('course_id')
+                ->nullable()
+                ->constrained('courses')
+                ->nullOnDelete();
+
+            $table->foreignId('trade_id')
+                ->nullable()
+                ->constrained('trades')
+                ->nullOnDelete();
+
             $table->string('gender')->nullable();
             $table->string('state')->nullable();
-            $table->timestamp('mobile_verified_at')->nullable(); 
+            $table->timestamp('mobile_verified_at')->nullable();
             $table->boolean('completed_profile')->default(false);
             $table->rememberToken();
             $table->timestamps();

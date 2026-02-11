@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id');
+            $table->foreignId('student_id')
+                ->constrained('students')
+                ->cascadeOnDelete();
+
             $table->text('description');
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
