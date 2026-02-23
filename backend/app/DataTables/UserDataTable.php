@@ -37,6 +37,11 @@ class UserDataTable extends DataTable
             // ACTION BUTTONS
             ->addColumn('actions', function ($row) {
 
+                if ($row->hasRole('superadmin')) {
+                    return ''; // completely blank
+                }
+
+
                 $editUrl   = route('admin.users.edit', $row->id);
                 $deleteUrl = route('admin.users.destroy', $row->id);
                 $resetUrl  = route('admin.users.reset-password', $row->id);  // NEW RESET PASSWORD ROUTE
